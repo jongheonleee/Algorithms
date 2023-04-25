@@ -1,39 +1,38 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-
+import java.util.*;
 public class Main {
-    static Integer[] a;
+    static int[] a = new int[10];
+    static int [] num = new int[10];
     static StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] line;
-        line = br.readLine().split(" ");
-        int n = Integer.parseInt(line[0]), m = Integer.parseInt(line[1]);
-        a = new Integer[n];
-        line = br.readLine().split(" ");
-        for (int i=0; i<n; i++) {
-            a[i] = Integer.parseInt(line[i]);
-        }
-
-        // 정렬시키기
-        Arrays.sort(a);
-        go(0, m, "");
-        System.out.println(sb);
-
-    }
-
-    public static void go(int start, int m, String sequence) {
-        if (m == 0) {
-            sb.append(sequence).append("\n");
+    public static void go(int idx, int start, int n, int m) {
+        if (idx == m) {
+            for (int i=0; i<m; i++) {
+                sb.append(num[a[i]]);
+                if (i != m-1) sb.append(" ");
+            }
+            sb.append("\n");
             return;
         }
 
-        for (int i=start; i<a.length; i++) {
-            go(i+1, m-1, sequence + (a[i] + " "));
+        for (int i=start; i<n; i++) {
+            a[idx] = i;
+            go(idx+1, i+1, n, m);
         }
     }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line1 = br.readLine().split(" ");
+        int n = Integer.parseInt(line1[0]), m = Integer.parseInt(line1[1]);
+        String[] line2 = br.readLine().split(" ");
+        for (int i=0; i<n; i++) {
+            num[i] = Integer.parseInt(line2[i]);
+        }
+        Arrays.sort(num, 0, n);
+        go(0, 0, n, m);
+        System.out.println(sb);
 
+    }
 }
