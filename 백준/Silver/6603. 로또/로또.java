@@ -1,5 +1,10 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 public class Main {
+    static StringBuilder sb = new StringBuilder();
+
     static boolean next_permutgetion(int[] a) {
         int i = a.length-1;
         while (i > 0 && a[i-1] >= a[i]) {
@@ -29,7 +34,7 @@ public class Main {
         }
         return true;
     }
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
         Scanner sc = new Scanner(System.in);
         while (true) {
             int n = sc.nextInt();
@@ -72,11 +77,13 @@ public class Main {
             });
             for (ArrayList<Integer> v : ans) {
                 for (int x : v) {
-                    System.out.print(x + " ");
+                    sb.append(x).append(" ");
                 }
-                System.out.println();
+                sb.append("\n");
             }
-            System.out.println();
+            sb.append("\n");
         }
+
+        System.out.println(sb);
     }
 }
