@@ -2,35 +2,28 @@ import java.io.*;
 import java.util.*;
 public class Main {
 
-    public static boolean next_permutation(int[] a) {
+    public static boolean previous_permutation(int[] a) {
         int i = a.length-1;
-        while (i>0 && a[i-1] <= a[i]) {
-            i--;
-        }
+        while (i>0 && a[i-1] <= a[i]) i--;
 
-        if (i <= 0)
-            return false;
+        if (i <= 0) return false;
 
         int j = a.length-1;
-        while (a[j] >= a[i-1]){
-            j--;
-        }
+        while (a[i-1] <= a[j]) j--;
 
         int tmp = a[i-1];
-        a[i-1] = a[j];
-        a[j] = tmp;
+        a[i-1] = a[j]; a[j] = tmp;
 
         j = a.length-1;
-        while (i < j) {
+        while(i < j) {
             tmp = a[i];
             a[i] = a[j]; a[j] = tmp;
-            i += 1; j -= 1;
+            i++; j--;
         }
 
         return true;
-
     }
-    public static void main(String[] args) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(br.readLine());
@@ -39,15 +32,13 @@ public class Main {
         for (int i=0; i<n; i++) {
             a[i] = Integer.parseInt(line[i]);
         }
-
-        if (next_permutation(a)) {
+        if (previous_permutation(a)) {
             for (int i=0; i<n; i++) {
                 sb.append(a[i]).append(" ");
             }
             System.out.println(sb);
-        } else {
+        }else {
             System.out.println(-1);
         }
-
     }
 }
