@@ -1,29 +1,27 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.function.Function;
-
+import java.util.*;
+import java.io.*;
 public class Main {
-    Function<Integer, Boolean> isOdd = (n) -> (n&1)==1;
 
-    public void solution() throws Exception {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         int n = Integer.parseInt(br.readLine());
-        if (isOdd.apply(n)) {
+        int[] d = new int[n+1];
+
+        // 예외 처리
+        if (n<2 || n%2==1) {
             System.out.println(0);
             return;
         }
-        int[] dp = new int[Math.max(n/2, 2)];
-        dp[0] = 3;
-        dp[1] = 11;
-        int tmp = 0;
-        for (int i = 2; i < n/2; i++) {
-            dp[i] = dp[i-1] * 3 + 2 + (tmp+=dp[i-2]*2);
-        }
-        System.out.println(dp[n/2-1]);
-    }
 
-    public static void main(String[] args) throws Exception {
-        new Main().solution();
+        // 기본 세팅 값
+        d[2] = 3;
+        // 누적합 계산
+        int acc = 0;
+        for (int i=4; i<=n; i+=2) {
+            acc += d[i-4]*2;
+            d[i] = d[i-2]*3 + 2 + acc;
+        }
+
+        System.out.println(d[n]);
     }
 }
