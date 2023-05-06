@@ -11,12 +11,17 @@ public class Main{
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
+        // 인접 행렬
         boolean[][] a = new boolean[n][n];
+        // 간선 리스트
         ArrayList<Integer>[] g = (ArrayList<Integer>[]) new ArrayList[n];
+        // 인접 리스트
         ArrayList<Edge> edges = new ArrayList<Edge>();
+
         for (int i=0; i<n; i++) {
             g[i] = new ArrayList<Integer>();
         }
+
         for (int i=0; i<m; i++) {
             int from = sc.nextInt();
             int to = sc.nextInt();
@@ -26,6 +31,8 @@ public class Main{
             g[from].add(to);
             g[to].add(from);
         }
+
+        // 이부분 코드의 의도를 잘 모르겠음
         m *= 2;
         for  (int i=0; i<m; i++) {
             for (int j=0; j<m; j++) {
@@ -33,11 +40,16 @@ public class Main{
                 int B = edges.get(i).to;
                 int C = edges.get(j).from;
                 int D = edges.get(j).to;
+                // 연결된 형태가 아니라 같은 경우, 즉 연결이 안된 경우(간선 리스트)
                 if (A == B || A == C || A == D || B == C || B == D || C == D) {
                     continue;
                 }
+                // B-C 연결이 안된 경우(인접 행렬)
                 if (!a[B][C]) continue;
+
+                // (인접 리스트)
                 for (int E : g[D]) {
+                    // 연결된 형태가 아니라 같은 경우, 즉 연결이 안된 경우
                     if (A == E || B == E || C == E || D == E) {
                         continue;
                     }
