@@ -1,41 +1,49 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    public static void dfs(ArrayList<Integer>[] a, boolean[] c, int x) {
-        if (c[x]) {
-            return;
-        }
-        c[x] = true;
-        for (int y : a[x]) {
-            if (c[y] == false) {
-                dfs(a, c, y);
-            }
+
+    static ArrayList<Integer>[] graph;
+    static boolean[] check;
+
+    static void dfs(int v) {
+        if (check[v]) return;
+
+        check[v] = true;
+        for (int next : graph[v]) {
+            dfs(next);
         }
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        ArrayList<Integer>[] a = (ArrayList<Integer>[]) new ArrayList[n+1];
-        for (int i=1; i<=n; i++) {
-            a[i] = new ArrayList<Integer>();
-        }
-        for (int i=0; i<m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            a[u].add(v);
-            a[v].add(u);
-        }
-        boolean[] check = new boolean[n+1];
-        int ans = 0;
-        for (int i=1; i<=n; i++) {
-            if (check[i] == false) {
-                dfs(a, check, i);
-                ans += 1;
-            }
-        }
-        System.out.println(ans);
-                
 
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = br.readLine().split(" ");
+        int n = Integer.parseInt(line[0]), m = Integer.parseInt(line[1]);
+
+        graph = (ArrayList<Integer>[]) new ArrayList[n+1];
+        for (int i=1; i<=n; i++) {
+            graph[i] = new ArrayList<Integer>();
+        }
+
+        for (int i=0; i<=m-1; i++) {
+            line = br.readLine().split(" ");
+            int u = Integer.parseInt(line[0]), v = Integer.parseInt(line[1]);
+            // 방향없는 그래프
+            graph[u].add(v);
+            graph[v].add(u);
+        }
+
+        check = new boolean[n+1];
+
+        int result = 0;
+        for (int src=1; src<=n; src++) {
+            if (check[src]) continue;
+            dfs(src);
+            result++;
+        }
+
+        System.out.println(result);
     }
 }
