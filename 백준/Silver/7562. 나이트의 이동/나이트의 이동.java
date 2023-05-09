@@ -1,38 +1,63 @@
 import java.util.*;
+import java.io.*;
+
+class Pair {
+    int x, y;
+
+    Pair(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
 public class Main {
-    static final int[] dx = {-2,-1,1,2,2,1,-1,-2};
-    static final int[] dy = {1,2,2,1,-1,-2,-2,-1};
+
+    public static final int[] dx = {1, 2, 2, 1, -1, -2, -2, -1};
+    public static final int[] dy = {2, 1, -1, -2, -2, -1, 1, 2};
+
     public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
         int t = sc.nextInt();
+
         while (t-- > 0) {
             int n = sc.nextInt();
-            int sx = sc.nextInt();
-            int sy = sc.nextInt();
-            int ex = sc.nextInt();
-            int ey = sc.nextInt();
-            int[][] d = new int[n][n];
-            for (int i=0; i<n; i++) {
-                Arrays.fill(d[i],-1);
+            int sx = sc.nextInt(), sy = sc.nextInt();
+            int ex = sc.nextInt(), ey = sc.nextInt();
+
+            int[][] b = new int[n][n];
+
+            for (int i=0; i<n; i++){
+                for (int j=0; j<n; j++) {
+                    b[i][j] = -1;
+                }
             }
-            Queue<Integer> q = new LinkedList<>();
-            q.add(sx); q.add(sy);
-            d[sx][sy] = 0;
+
+            Queue<Pair> q = new LinkedList<>();
+            q.add(new Pair(sx, sy));
+            b[sx][sy] = 0;
+
             while (!q.isEmpty()) {
-                int x = q.remove();
-                int y = q.remove();
+                Pair p = q.remove();
+                int x = p.x, y = p.y;
+
+                if (x == ex && y == ey){
+                    sb.append(b[ex][ey]).append("\n");
+                    break;
+                }
+
                 for (int k=0; k<8; k++) {
-                    int nx = x+dx[k];
-                    int ny = y+dy[k];
+                    int nx = x+dx[k], ny = y+dy[k];
+
                     if (0 <= nx && nx < n && 0 <= ny && ny < n) {
-                        if (d[nx][ny] == -1) {
-                            d[nx][ny] = d[x][y] + 1;
-                            q.add(nx); q.add(ny);
+                        if (b[nx][ny] == -1){
+                            q.add(new Pair(nx, ny));
+                            b[nx][ny] = b[x][y] + 1;
                         }
                     }
                 }
             }
-            System.out.println(d[ex][ey]);
         }
+        System.out.println(sb);
+
     }
 }
