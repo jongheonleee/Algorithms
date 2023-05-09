@@ -1,68 +1,72 @@
 import java.util.*;
+import java.io.*;
+
 
 class Pair {
-    int x;
-    int y;
+    int x, y;
+
     Pair(int x, int y) {
         this.x = x;
         this.y = y;
     }
 }
-
 public class Main {
-    // 이동 방향 정의해주기 대각선 + 동서남북 총 8가지 방향
-    public static final int[] dx = {0, 0, 1, -1, 1, 1, -1, -1};
-    public static final int[] dy = {1, -1, 0, 0, 1, -1, 1, -1};
-    public static void bfs(int[][] a, int[][] group, int x, int y, int cnt, int n, int m) {
-        Queue<Pair> q = new LinkedList<Pair>();
+
+    public static final int[] dx = {0, 0, 1, -1, 1, -1, 1, -1};
+    public static final int[] dy = {1, -1, 0, 0, -1, 1, 1, -1};
+    public static void bfs(int[][] a, int[][] g, int x, int y, int cnt, int n, int m) {
+        Queue<Pair> q = new LinkedList<>();
         q.add(new Pair(x, y));
-        group[x][y] = cnt;
-        
+        g[x][y] = cnt;
+
         while (!q.isEmpty()) {
             Pair p = q.remove();
-            x = p.x;
-            y = p.y;
+            x = p.x; y = p.y;
+
             for (int k=0; k<8; k++) {
-                int nx = x+dx[k];
-                int ny = y+dy[k];
-                
-                if (0 <= nx && nx < n && 0 <= ny && ny < m) {
-                    if (a[nx][ny] == 1 && group[nx][ny] == 0) {
+                int nx = x+dx[k], ny = y+dy[k];
+
+                if (0 <= nx && nx < m && 0 <= ny && ny < n) {
+                    if (a[nx][ny] == 1 && g[nx][ny] == 0) {
                         q.add(new Pair(nx, ny));
-                        group[nx][ny] = cnt;
+                        g[nx][ny] = cnt;
                     }
                 }
             }
         }
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
+
+
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+
         while (true) {
-            int m = sc.nextInt();
-            int n = sc.nextInt();
-            // 종료 조건
-            if (n == 0 && m == 0) {
-                break;
-            }
-            // 문제에서 주어진 지도 구현
-            int[][] a = new int[n][m];
-            for (int i=0; i<n; i++) {
-                for (int j=0; j<m; j++) {
-                    a[i][j] = sc.nextInt();
+            String[] line1 = br.readLine().split(" ");
+            int n = Integer.parseInt(line1[0]), m = Integer.parseInt(line1[1]);
+
+            if (n == 0 && m == 0) break;
+
+            int[][] a = new int[m][n];
+            for (int i=0; i<m; i++) {
+                String[] line2 = br.readLine().split(" ");
+                for (int j=0; j<n; j++) {
+                    a[i][j] = Integer.parseInt(line2[j]);
                 }
             }
-            // 섬의 개수 카운트
+
             int cnt = 0;
-            // 특정 땅에서 다른 땅으로 이동가능할 경우 서로 연결된 하나의 섬으로 세주기
-            int[][] group = new int[n][m];
-            for (int i=0; i<n; i++) {
-                for (int j=0; j<m; j++) {
-                    if (a[i][j] == 1 && group[i][j] == 0) {
-                        bfs(a, group, i, j, ++cnt, n, m);
+            int[][] g = new int[m][n];
+            for (int i=0; i<m; i++) {
+                for (int j=0; j<n; j++) {
+                    if (a[i][j] == 1 && g[i][j] == 0) {
+                        bfs(a, g, i, j, ++cnt, n, m);
                     }
                 }
             }
-            System.out.println(cnt);
+            sb.append(cnt).append("\n");
         }
+        System.out.println(sb);
+
     }
 }
