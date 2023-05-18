@@ -3,44 +3,42 @@ import java.io.*;
 public class Main {
 
     static final int LIMIT = 1000000;
+
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
         int src = Integer.parseInt(line[0]), dest = Integer.parseInt(line[1]);
 
-        boolean[] check = new boolean[LIMIT];
-        int[] time = new int[LIMIT];
+        int[] time = new int[LIMIT+1];
+        Arrays.fill(time, -1);
 
-        check[src] = true; time[src] = 0;
+        Queue<Integer> currentQ = new LinkedList<>(), nextQ = new LinkedList<>();
+        currentQ.add(src);
+        time[src] = 0;
 
-        Queue<Integer> q1 = new LinkedList<>();
-        Queue<Integer> q2 = new LinkedList<>();
-        q1.add(src);
+        while (!currentQ.isEmpty()) {
+            int current = currentQ.remove();
 
-        while (!q1.isEmpty()) {
-            int curr = q1.remove();
+            for (int next : new int[]{current-1, current+1, current*2}) {
+                if (0 <= next && next <= LIMIT && time[next] == -1) {
+                    if (next == current*2) {
+                        time[next] = time[current];
+                        currentQ.add(next);
+                    }
 
-            for (int next : new int[] {curr*2, curr-1, curr+1}) {
-                if (next >= 0 && next < LIMIT) {
-                    if (check[next] == false) {
-                        check[next] = true;
-
-                        if (curr*2 == next) {
-                            q1.add(next);
-                            time[next] = time[curr];
-                        }
-                        else {
-                            q2.add(next);
-                            time[next] = time[curr]+1;
-                        }
+                    else {
+                        time[next] = time[current]+1;
+                        nextQ.add(next);
                     }
                 }
             }
-            if (q1.isEmpty()) {
-                q1 = q2;
-                q2 = new LinkedList<>();
+
+            if (currentQ.isEmpty()) {
+                currentQ = nextQ;
+                nextQ = new LinkedList<>();
             }
         }
+
         System.out.println(time[dest]);
 
     }
