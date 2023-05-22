@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -14,20 +15,22 @@ class Edge {
 public class Main {
 
     static int[] bfs(int n, List<Edge>[] a, int start) {
-        Queue<Integer> q = new LinkedList<>();
         int[] dist = new int[n+1];
         boolean[] check = new boolean[n+1];
-        q.add(start); dist[start] = 0; check[start] = true;
+        Queue<Integer> q = new LinkedList<>();
+
+        q.add(start); check[start] = true;
 
         while (!q.isEmpty()) {
             int x = q.remove();
+
             for (Edge e : a[x]) {
                 int y = e.to;
-                int cost = e.cost;
+                int z = e.cost;
 
                 if (check[y] == false) {
-                    dist[y] = dist[x] + cost;
                     check[y] = true;
+                    dist[y] = dist[x] + z;
                     q.add(y);
                 }
             }
@@ -35,17 +38,18 @@ public class Main {
 
         return dist;
     }
-    public static void main(String args[]) throws IOException {
+
+    public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        List<Edge>[] a = (List<Edge>[])new List[n+1];
 
+        // 트리 구현하기
+        List<Edge>[] a = (List<Edge>[]) new List[n+1];
         for (int i=1; i<=n; i++) {
-            a[i] = new ArrayList<Edge>();
+            a[i] = new ArrayList<>();
         }
 
-        // 트리 구현해주기
-        for (int i=1; i<=n; i++) {
+        for (int i=0; i<n; i++) {
             int x = sc.nextInt();
             while (true) {
                 int y = sc.nextInt();
@@ -56,7 +60,6 @@ public class Main {
             }
         }
 
-        // bfs 탐색 2번 진행해주기
         int[] dist = bfs(n, a, 1);
         int start = 1;
         for (int i=2; i<=n; i++) {
@@ -66,14 +69,14 @@ public class Main {
         }
 
         dist = bfs(n, a, start);
-
-        // 최대 길이(지름) 찾기
         int ans = 0;
         for (int i=1; i<=n; i++) {
-            if (dist[i] > ans) {
+            if (ans < dist[i]) {
                 ans = dist[i];
             }
         }
         System.out.println(ans);
+
+
     }
 }
