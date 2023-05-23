@@ -1,67 +1,45 @@
+import java.util.*;
 import java.io.*;
-import java.util.StringTokenizer;
-
 
 public class Main {
 
-    public static char[][] board;
-    public static int n;
+    static int[] dx = {0, 0, 1, -1};
+    static int[] dy = {1, -1, 0, 0};
 
-    public static void main(String[] args) throws IOException {
+    static int ans = 0;
+
+    static char[][] a;
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        int ans = 1;
-        // 2차원 배열(char)을 기준으로 board 사탕판 구현해주기
-        board = new char[n][n];
+        int n = Integer.parseInt(br.readLine());
+        a = new char[n][n];
+
         for (int i=0; i<n; i++) {
-            String s = br.readLine();
+            String line = br.readLine();
             for (int j=0; j<n; j++) {
-                board[i][j] = s.charAt(j);
+                a[i][j] = line.charAt(j);
             }
         }
 
-        // 이중 for 문으로 모든 사탕 선택해주기. 브루트 포스 알고리즘 적용하기
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                // 스왑을 할 때 인덱스 부분 고려하기
-                int len = 1;
-                // 예외처리
-                if (i == n-1 && j == n-1) continue;
+        for (int x=0; x<n; x++) {
+            for (int y=0; y<n; y++) {
+                // 스왑하지 않은 경우
+                calculateRow(x, y);
+                calculateColumn(x, y);
+                
+                // 스왑을 한 경우
+                for (int k=0; k<4; k++) {
+                    int nx = x+dx[k]; int ny = y+dy[k];
 
-                // 옆으로 아래로 스왑 가능한 경우
-                if ((0 <= i && i <= n-2) && (0 <= j && j <= n-2)) {
-                    // 아래로 스왑한 경우
-                    swap(i, j, i+1, j);
-                    len = calLen();
-                    if (ans < len) ans = len;
-                    // 다시 되돌리기
-                    swap(i, j, i+1, j);
-
-                    // 옆으로 스왑한 경우
-                    swap(i, j, i, j+1);
-                    len = calLen();
-                    if (ans < len) ans = len;
-                    // 다시 되돌리기
-                    swap(i, j, i, j+1);
+                    if (0 <= nx && nx < n && 0 <= ny && ny < n) {
+                        if (a[x][y] != a[nx][ny]) {
+                            swap(x, y, nx, ny);
+                            calculateRow(x, y);
+                            calculateColumn(x, y);
+                            swap(x, y, nx, ny);
+                        }
+                    }
                 }
-                // 맨 아래 행의 경우 옆으로만 스왑이 가능함
-                else if (i == n-1) {
-                    // 옆으로 스왑만 가능한 경우
-                    swap(i, j, i, j+1);
-                    len = calLen();
-                    if (ans < len) ans = len;
-                    // 다시 되돌리기
-                    swap(i, j, i, j+1);
-                }
-                // 맨 오른족 열의 경우 아래로만 스왑이 가능함
-                else {
-                    swap(i, j, i+1, j);
-                    len = calLen();
-                    if (ans < len) ans = len;
-                    swap(i, j, i+1, j);
-
-                }
-
             }
         }
 
@@ -69,44 +47,45 @@ public class Main {
 
     }
 
-    public static void swap (int i1, int j1, int i2, int j2) {
-        char tmp = board[i1][j1];
-        board[i1][j1] = board[i2][j2];
-        board[i2][j2] = tmp;
-
+    static void swap(int x, int y, int nx, int ny) {
+        char tmp = a[x][y];
+        a[x][y] = a[nx][ny];
+        a[nx][ny] = tmp;
     }
 
-    public static int calLen() {
-        int max = 1;
-        for (int i=0; i<n; i++) {
-            int len = 1;
-            for (int j=0; j<n-1; j++) {
-                if (board[i][j] == board[i][j+1]) {
-                    len++;
-                }
-                else {
-                    if (max < len) max = len;
-                    len = 1;
-                }
-            }
-
-            if (max < len) max = len;
+    static void calculateRow(int x, int y) {
+        int len = 0;
+        for (int i=x; i>=0; i--) {
+            if (a[x][y] == a[i][y]) len++;
+            else break;
         }
 
-        for (int j=0; j<n; j++) {
-            int len = 1;
-            for (int i=0; i<n-1; i++) {
-                if (board[i][j] == board[i+1][j]) {
-                    len++;
-                }
-                else {
-                    if (max < len) max = len;
-                    len = 1;
-                }
-            }
-
-            if (max < len) max = len;
+        for (int i=x; i<a.length; i++) {
+            if (a[x][y] == a[i][y]) len++;
+            else break;
         }
-        return max;
+        len--;
+
+        if (ans < len) {
+            ans = len;
+        }
+    }
+
+    static void calculateColumn(int x, int y) {
+        int len = 0;
+        for (int i=y; i>=0; i--) {
+            if (a[x][y] == a[x][i]) len++;
+            else break;
+        }
+
+        for (int i=y; i<a[0].length; i++) {
+            if (a[x][y] == a[x][i]) len++;
+            else break;
+        }
+        len--;
+
+        if (ans < len) {
+            ans = len;
+        }
     }
 }
