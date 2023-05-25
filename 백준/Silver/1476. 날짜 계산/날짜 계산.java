@@ -1,30 +1,36 @@
+import java.util.*;
 import java.io.*;
-import java.util.StringTokenizer;
-
-
 public class Main {
 
-    static int MAX = Integer.MAX_VALUE;
-    static int E;
-    static int S;
-    static int M;
-    public static void main(String[] args) throws IOException {
+    static int eMod = 15;
+    static int sMod = 28;
+    static int mMod = 19;
+
+    public static void main(String args[]) throws IOException {
+        int y = 1;
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        E = Integer.parseInt(st.nextToken());
-        S = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        String[] line = br.readLine().split(" ");
+        int e = Integer.parseInt(line[0]);
+        int s = Integer.parseInt(line[1]);
+        int m = Integer.parseInt(line[2]);
 
-        if (E == 15) E = 0;
-        if (S == 28) S = 0;
-        if (M == 19) M = 0;
+        while (true) {
+            int yToE = y%eMod;
+            if (yToE == 0) yToE = 15;
 
-        for (int y=1; y<MAX; y++) {
-            if (y%15 == E && y%28 == S && y%19 == M) {
+            int yToS = y%sMod;
+            if (yToS == 0) yToS = 28;
+
+            int yToM = y%mMod;
+            if (yToM == 0) yToM = 19;
+
+            if (yToE == e && yToS == s && yToM == m) {
                 System.out.println(y);
                 break;
             }
+            y++;
         }
-    }
 
+    }
 }
