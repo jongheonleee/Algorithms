@@ -1,40 +1,41 @@
+import javax.swing.*;
 import java.util.*;
 import java.io.*;
 public class Main {
-    static final int COUNT = 6;
+    static final int NUMBER = 6;
     static StringBuilder sb = new StringBuilder();
-
-    static ArrayList<Integer> lotto = new ArrayList<>();
-    static void go(int[] a, int idx, int cnt) {
-        if (cnt == COUNT) {
-            for (int n : lotto) {
-                sb.append(n).append(" ");
+    static void go(int[] a, int i, int cnt, ArrayList<Integer> lotto) {
+        if (cnt == NUMBER) {
+            for (int j=0; j<NUMBER; j++) {
+                sb.append(lotto.get(j)).append(" ");
             }
             sb.append("\n");
             return;
         }
-
-        int n = a.length;
-        if (n == idx) return;
-
-        lotto.add(a[idx]);
-        go(a, idx+1, cnt+1);
+        
+        if (i == a.length) return;
+        
+        lotto.add(a[i]);
+        go(a, i+1, cnt+1, lotto);
         lotto.remove(lotto.size()-1);
-        go(a, idx+1, cnt);
-
+        go(a, i+1, cnt, lotto);
     }
     public static void main(String args[]) throws IOException {
-        Scanner sc = new Scanner(System.in);
-
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
         while (true) {
-            int k = sc.nextInt();
+            String[] line = br.readLine().split(" ");
+            int k = Integer.parseInt(line[0]);
+            
             if (k == 0) break;
+            
             int[] a = new int[k];
-            for (int i=0; i<k; i++) {
-                a[i] = sc.nextInt();
+            for (int i=1; i<=k; i++) {
+                a[i-1] = Integer.parseInt(line[i]);
             }
-
-            go(a, 0, 0);
+            
+            ArrayList<Integer> lotto = new ArrayList<>();
+            go(a, 0, 0, lotto);
             sb.append("\n");
         }
 
