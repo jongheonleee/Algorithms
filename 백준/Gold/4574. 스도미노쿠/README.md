@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 21000 KB, 시간: 324 ms
+메모리: 20688 KB, 시간: 304 ms
 
 ### 분류
 
@@ -26,7 +26,7 @@
 
 <p>왼쪽 그림은 퍼즐의 초기 상태를 나타내고, 오른쪽은 퍼즐을 푼 상태이다.</p>
 
-<p><img alt="" src="" style="height:352px; width:352px"><img alt="" src="" style="height:352px; width:352px"></p>
+<p><img alt="" src="https://www.acmicpc.net/upload/images/example1.png" style="height:352px; width:352px"><img alt="" src="https://www.acmicpc.net/upload/images/example1-soln.png" style="height:352px; width:352px"></p>
 
 <p>스도미노쿠의 퍼즐의 초기 상태가 주어졌을 때, 퍼즐을 푸는 프로그램을 작성하시오.</p>
 
