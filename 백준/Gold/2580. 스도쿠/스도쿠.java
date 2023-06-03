@@ -2,77 +2,92 @@ import java.io.*;
 import java.util.*;
 public class Main {
 
-    private static StringBuilder sb = new StringBuilder();
-    private static final int n = 9;
-    private static int square(int x, int y) {
-        // 3*3 정사각형이 스도쿠에 총 9개가 있음
-        // 이를 1차원 배열로 바꿔주기 위해서
-        // 행과 열을 /3을 해줘서 축소한 다음 3개의 행을 *3으로 다시 표현함
-        // 즉 0은 맨 첫번째 정사각형을 의미하고 9는 마지막 정사각형을 의미함
-        return (x/3)*3 + (y/3);
+    static final int n = 9;
+    static StringBuilder sb = new StringBuilder();
+    static boolean[][][] check = new boolean[3][n][n+1];
+
+    static int[][] a = new int[n][n];
+
+    static int square(int x, int y) {
+        return (x/3) * 3 + (y/3);
     }
 
-    private static boolean go(int[][] a, boolean[][][] c, int z) {
-        // 정답을 찾은 경우, 호출 중단
-        if (z == n*n) {
-            for (int i=0; i<n; i++) {
-                for (int j=0; j<n; j++) {
-                    sb.append(a[i][j]).append(" ");
+    static boolean go(int i) {
+        // 정답을 찾은 경우, 모든 칸을 다 채웠을 때
+        if (i == n*n) {
+            for (int x=0; x<n; x++) {
+                for (int y=0; y<n; y++) {
+                    sb.append(a[x][y]).append(" ");
                 }
                 sb.append("\n");
             }
-
             return true;
         }
 
-        int x = z/n; int y = z%n;
+        // 다음을 호출하는 경우
+        int x = i/n; int y = i%n;
 
-        // 해당 칸 (z)가 이미 채워진 경우
+        // 이미 채워진 경우 스킵하고 바로 다음 경우 호출
         if (a[x][y] != 0) {
-            // 다음 칸으롷 이동
-            return go(a, c, z+1);
+            return go(i+1);
         }
         else {
-            for (int i=1; i<=9; i++) {
-                if (!c[0][x][i] && !c[1][y][i] && !c[2][square(x, y)][i]) {
-                    c[0][x][i] = c[1][y][i] = c[2][square(x, y)][i] = true;
-                    a[x][y] = i;
+            // 채워지지 않은 경우
+            for (int num=1; num<=9; num++) {
+                // 해당 숫자를 사용해도 되는지 확인하기
+                // 행/열/정사각형에서 해당 숫자가 나왔는지 안나왔는지 확인해보기
+                if (check[0][x][num] == false
+                        && check[1][y][num] == false
+                        && check[2][square(x, y)][num] == false) {
+                    // 안나온 경우
+                    // 세팅
+                    a[x][y] = num;
+                    check[0][x][num] = true;
+                    check[1][y][num] = true;
+                    check[2][square(x, y)][num] = true;
 
-                    if (go(a, c, z+1)) {
+                    // 다음 경우 호출
+                    if (go(i + 1)) {
                         return true;
                     }
+                    ;
+
+                    // 초기화
                     a[x][y] = 0;
-                    c[0][x][i] = c[1][y][i] = c[2][square(x, y)][i] = false;
+                    check[0][x][num] = false;
+                    check[1][y][num] = false;
+                    check[2][square(x, y)][num] = false;
+
                 }
             }
         }
+
         return false;
+
     }
+
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int[][] a = new int[n][n];
-        // 이 부분이 핵심임
-        // 0 : 행에 해당 숫자의 존재 여부를 저장함
-        // 1 : 열에 해당 숫자의 존재 여부를 저장함
-        // 2 : 3*3 정사각형에 해당 숫자의 존재 여부를 저장함
-        boolean[][][] c = new boolean[3][n][10];
-
+        // 보드판 세팅해주기
         for (int i=0; i<n; i++) {
             String[] line = br.readLine().split(" ");
             for (int j=0; j<n; j++) {
-                a[i][j] = line[j].charAt(0) - '0';
+                int num = line[j].charAt(0) - '0';
+                a[i][j] = num;
 
-                if (a[i][j] != 0) {
-                    // i번째 행에 a[i][j] 숫자가 있음
-                    c[0][i][a[i][j]] = true;
-                    // j번째 열에 a[i][j] 숫자가 있음
-                    c[1][j][a[i][j]] = true;
-                    // i번째 행에 a[i][j] 숫자가 있음
-                    c[2][square(i, j)][a[i][j]] = true;
+                if (num != 0) {
+                    // 세팅해주기(행, 열, 정사각형)
+                    check[0][i][num] = true;
+                    check[1][j][num] = true;
+                    check[2][square(i, j)][num] = true;
                 }
             }
         }
-        go(a, c, 0);
-        System.out.println(sb);
+
+        if (go(0)) {
+            System.out.println(sb);
+        } else {
+            System.out.println(-1);
+        };
     }
 }
