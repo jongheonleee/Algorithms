@@ -1,156 +1,177 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.swing.*;
+import java.io.*;
 import java.util.*;
 public class Main {
-    static int[] dx = {0,0,1,-1};
-    static int[] dy = {1,-1,0,0};
-    static final int LIMIT = 5;
+
+    static final int limit = 5;
     static int[] gen(int k) {
-        int[] a = new int[LIMIT];
-        for (int i=0; i<LIMIT; i++) {
-            a[i] = (k&3);
+        int[] dir = new int[limit];
+
+        for (int i=0; i<limit; i++) {
+            dir[i] = (k&3);
             k >>= 2;
         }
-        return a;
+
+        return dir;
     }
-    static int check(int[][] board, int[] dirs) {
+
+    static int simulate(int[][] board, int[] dir) {
         int n = board.length;
-        int[][] d = new int[n][n];
+
         boolean[][] merged = new boolean[n][n];
+        int[][] copyBoard = new int[n][n];
 
         for (int i=0; i<n; i++) {
             for (int j=0; j<n; j++) {
-                d[i][j] = board[i][j];
+                copyBoard[i][j] = board[i][j];
             }
         }
 
-        // 0: down, 1: up, 2: left, 3: right
-        for (int dir : dirs) {
-            boolean ok = false;
+        boolean ok = false;
+
+        for (int d : dir) {
+            ok = false;
 
             for (int i=0; i<n; i++) {
                 for (int j=0; j<n; j++) {
                     merged[i][j] = false;
                 }
             }
+
             while (true) {
                 ok = false;
-                // down
-                if (dir == 0) {
+                // 아래
+                if (d == 0) {
                     for (int i=n-2; i>=0; i--) {
                         for (int j=0; j<n; j++) {
-                            if (d[i][j] == 0) continue;
+                            if (copyBoard[i][j] == 0) continue;
 
-                            if (d[i+1][j] == 0) {
-                                d[i+1][j] = d[i][j];
+                            if (copyBoard[i+1][j] == 0) {
+                                copyBoard[i+1][j] = copyBoard[i][j];
+                                copyBoard[i][j] = 0;
                                 merged[i+1][j] = merged[i][j];
-                                d[i][j] = 0;
                                 ok = true;
-                            }
-                            else if (d[i+1][j] == d[i][j]) {
-                                if (merged[i][j] == false && merged[i+1][j] == false) {
-                                    d[i+1][j] *= 2;
+                            } else if (copyBoard[i+1][j] == copyBoard[i][j]) {
+                                if (merged[i+1][j] == false && merged[i][j] == false) {
+                                    copyBoard[i+1][j] *= 2;
+                                    copyBoard[i][j] = 0;
                                     merged[i+1][j] = true;
-                                    d[i][j] = 0;
-                                    ok = true;
-                                }
-                            }
-                        }
-                    }
-                    // up
-                } else if (dir == 1) {
-                    for (int i=1; i<n; i++) {
-                        for (int j=0; j<n; j++) {
-                            if (d[i][j] == 0) continue;
-                            if (d[i-1][j] == 0) {
-                                d[i-1][j] = d[i][j];
-                                merged[i-1][j] = merged[i][j];
-                                d[i][j] = 0;
-                                ok = true;
-                            } else if (d[i-1][j] == d[i][j]) {
-                                if (merged[i][j] == false && merged[i-1][j] == false) {
-                                    d[i-1][j] *= 2;
-                                    merged[i-1][j] = true;
-                                    d[i][j] = 0;
-                                    ok = true;
-                                }
-                            }
-                        }
-                    }
-                    // left
-                } else if (dir == 2) {
-                    for (int j=1; j<n; j++) {
-                        for (int i=0; i<n; i++) {
-                            if (d[i][j] == 0) continue;
-                            if (d[i][j-1] == 0) {
-                                d[i][j-1] = d[i][j];
-                                merged[i][j-1] = merged[i][j];
-                                d[i][j] = 0;
-                                ok = true;
-                            } else if (d[i][j-1] == d[i][j]) {
-                                if (merged[i][j] == false && merged[i][j-1] == false) {
-                                    d[i][j-1] *= 2;
-                                    merged[i][j-1] = true;
-                                    d[i][j] = 0;
-                                    ok = true;
-                                }
-                            }
-                        }
-                    }
-                    // right
-                } else if (dir == 3) {
-                    for (int j=n-2; j>=0; j--) {
-                        for (int i=0; i<n; i++) {
-                            if (d[i][j] == 0) continue;
-                            if (d[i][j+1] == 0) {
-                                d[i][j+1] = d[i][j];
-                                merged[i][j+1] = merged[i][j];
-                                d[i][j] = 0;
-                                ok = true;
-                            } else if (d[i][j+1] == d[i][j]) {
-                                if (merged[i][j] == false && merged[i][j+1] == false) {
-                                    d[i][j+1] *= 2;
-                                    merged[i][j+1] = true;
-                                    d[i][j] = 0;
                                     ok = true;
                                 }
                             }
                         }
                     }
                 }
+                // 위
+                else if (d == 1) {
+                    for (int i=1; i<n; i++) {
+                        for (int j=0; j<n; j++) {
+                            if (copyBoard[i][j] == 0) continue;
+
+                            if (copyBoard[i-1][j] == 0) {
+                                copyBoard[i-1][j] = copyBoard[i][j];
+                                copyBoard[i][j] = 0;
+                                merged[i-1][j] = merged[i][j];
+                                ok = true;
+                            } else if (copyBoard[i-1][j] == copyBoard[i][j]) {
+                                if (merged[i-1][j] == false && merged[i][j] == false) {
+                                    copyBoard[i-1][j] *= 2;
+                                    copyBoard[i][j] = 0;
+                                    merged[i-1][j] = true;
+                                    ok = true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+                // 왼쩍
+                else if (d == 2) {
+                    for (int j=1; j<n; j++) {
+                        for (int i=0; i<n; i++) {
+                            if (copyBoard[i][j] == 0) continue;
+
+                            if (copyBoard[i][j-1] == 0) {
+                                copyBoard[i][j-1] = copyBoard[i][j];
+                                copyBoard[i][j] = 0;
+                                merged[i][j-1] = merged[i][j];
+                                ok = true;
+                            } else if (copyBoard[i][j-1] == copyBoard[i][j]) {
+                                if (merged[i][j-1] == false && merged[i][j] == false) {
+                                    copyBoard[i][j-1] *= 2;
+                                    copyBoard[i][j] = 0;
+                                    merged[i][j-1] = true;
+                                    ok = true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+                // 오른족
+                else if (d == 3) {
+                    for (int j=n-2; j>=0; j--) {
+                        for (int i=0; i<n; i++) {
+                            if (copyBoard[i][j] == 0) continue;
+
+                            if (copyBoard[i][j+1] == 0) {
+                                copyBoard[i][j+1] = copyBoard[i][j];
+                                copyBoard[i][j] = 0;
+                                merged[i][j+1] = merged[i][j];
+                                ok = true;
+                            } else if (copyBoard[i][j+1] == copyBoard[i][j]) {
+                                if (merged[i][j+1] == false && merged[i][j] == false) {
+                                    copyBoard[i][j+1] *= 2;
+                                    copyBoard[i][j] = 0;
+                                    merged[i][j+1] = true;
+                                    ok = true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
                 if (ok == false) break;
             }
         }
-        int ans = 0;
+
+        int max = 0;
         for (int i=0; i<n; i++) {
             for (int j=0; j<n; j++) {
-                if (ans < d[i][j]) {
-                    ans = d[i][j];
+                if (copyBoard[i][j] > max) {
+                    max = copyBoard[i][j];
                 }
             }
         }
-        return ans;
+
+        return max;
     }
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
         int[][] board = new int[n][n];
+
+        // 보드판 구현
         for (int i=0; i<n; i++) {
-            String[] line = br.readLine().split(" ");
+            String[] input = br.readLine().split(" ");
             for (int j=0; j<n; j++) {
-                board[i][j] = Integer.parseInt(line[j]);
+                board[i][j] = Integer.parseInt(input[j]);
             }
         }
 
-        int ans = 0;
-        for (int k=0; k<(1<<LIMIT*2); k++) {
+        int max = 0;
+        // 모든 경우의 수 구하고 시뮬레이션 돌림
+        for (int k=0; k<(1<<(limit*2)); k++) {
             int[] dir = gen(k);
-            int step = check(board, dir);
-            if (ans < step) ans = step;
+            int res = simulate(board, dir);
+
+            if (max < res) {
+                max = res;
+            }
         }
 
-        System.out.println(ans);
+        System.out.println(max);
     }
 }
