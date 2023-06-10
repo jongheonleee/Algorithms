@@ -56,6 +56,46 @@ public class Main {
 
         return size;
     }
+    static int dfs() {
+        int size = 0;
+        // 초기 세팅
+
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board[0].length; j++) {
+                copyBoard[i][j] = board[i][j];
+            }
+        }
+
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board[0].length; j++) {
+                if (copyBoard[i][j] == 2) {
+                    dfs(i, j);
+                }
+            }
+        }
+
+        for (int i=0; i<board.length; i++) {
+            for (int j=0; j<board[0].length; j++) {
+                if (copyBoard[i][j] == 0) size++;
+            }
+        }
+
+        return size;
+    }
+
+    static void dfs(int x, int y) {
+        for (int k=0; k<4; k++) {
+            int nx = x+dx[k], ny = y+dy[k];
+
+            if (0 <= nx && nx < board.length && 0 <= ny && ny < board[0].length) {
+                if (copyBoard[nx][ny] == 0) {
+                    copyBoard[nx][ny] = 2;
+                    dfs(nx, ny);
+                }
+            }
+        }
+
+    }
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -98,7 +138,7 @@ public class Main {
                                 board[i1][j1] = board[i2][j2] = board[i3][j3] = 1;
 
                                 // bfs 알고리즘 적용
-                                int size = bfs();
+                                int size = dfs();
                                 if (ans < size) {
                                     ans = size;
                                 }
