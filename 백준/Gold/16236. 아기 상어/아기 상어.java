@@ -84,8 +84,15 @@ public class Main {
             }
         }
 
-        if (eatableFishes.size() == 0) return null;
+        Fish eatenFish = findEatenFish(eatableFishes);
+        return eatenFish;
+    }
 
+    private static Fish findEatenFish(ArrayList<Fish> eatableFishes) {
+        if (eatableFishes.isEmpty()) {
+            return null;
+        }
+        
         Fish eatenFish = eatableFishes.get(0);
         for (Fish fish : eatableFishes) {
             if (eatenFish.dist > fish.dist) {
@@ -96,7 +103,7 @@ public class Main {
                 eatenFish = fish;
             }
         }
-
+        
         return eatenFish;
     }
 
