@@ -26,12 +26,14 @@ class Pair {
         this.y = y;
     }
 }
+
 public class Main {
 
 
     static int n;
     static int[] dx = {0, 0, 1, -1};
     static int[] dy = {1, -1, 0, 0};
+		static final int BABY_SHARK = 9;
 
     static boolean can(int x, int y, int[][] dist) {
         return (0 <= x && x < n && 0 <= y && y < n) && dist[x][y] == -1;
@@ -128,7 +130,7 @@ public class Main {
 
         for (int i=0; i<n; i++) {
             for (int j=0; j<n; j++) {
-                if (sea[i][j] == 9) {
+                if (sea[i][j] == BABY_SHARK) {
                     babySharkX = i;
                     babySharkY = j;
                     sea[babySharkX][babySharkY] = 0;
