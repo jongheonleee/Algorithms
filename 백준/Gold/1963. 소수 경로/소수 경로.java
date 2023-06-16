@@ -10,33 +10,12 @@ import java.io.*;
  */
 public class Main {
 
-    static final int IMPOSSIBLE = -1;
     static final int LIMIT = 10_000;
-
-    static boolean[] prime = new boolean[LIMIT+1];
     static boolean[] check = new boolean[LIMIT+1];
     static int[] dist = new int[LIMIT+1];
+    static boolean[] prime = new boolean[LIMIT+1];
 
-    private static void init() {
-        for (int i=0; i<=LIMIT; i++) {
-            check[i] = false;
-            dist[i] = 0;
-        }
-    }
-
-    private static int changeable(int currentNumbers, int pos, int number) {
-        if (pos == 0 && number == 0) {
-            return IMPOSSIBLE;
-        }
-
-        String currentNumbersToStr = Integer.toString(currentNumbers);
-        StringBuilder sb = new StringBuilder(currentNumbersToStr);
-        sb.setCharAt(pos, (char)(number+'0'));
-
-        return Integer.parseInt(sb.toString());
-    }
-
-    private static void eratos() {
+    static void eratos() {
         for (int i=2; i<=LIMIT; i++) {
             if (prime[i] == false) {
                 for (int j=i*i; j<=LIMIT; j+=i) {
@@ -44,17 +23,38 @@ public class Main {
                 }
             }
         }
-				// 소수인 숫자만 true로 저장하고 나머지 숫자들은 false로 저장
+
         for (int i=0; i<=LIMIT; i++) {
             prime[i] = !prime[i];
         }
     }
 
-    private static int bfs(int start, int target) {
-        dist[start] = 0; check[start] = true;
+    static void init() {
+        for (int i=0; i<=LIMIT; i++) {
+            check[i] = false;
+            dist[i] = 0;
+        }
+    }
 
+    static int changeable(int currentNumbers, int pos, int number) {
+        if (pos == 0 && number == 0) {
+            return -1;
+        }
+
+        String currentNumbersToStr = Integer.toString(currentNumbers);
+        StringBuilder sb = new StringBuilder(currentNumbersToStr);
+        sb.setCharAt(pos, (char)(number + '0'));
+
+        return Integer.parseInt(sb.toString());
+
+    }
+
+    static int bfs(int start, int target) {
         Queue<Integer> queue = new LinkedList<>();
+
         queue.add(start);
+        check[start] = true;
+        dist[start] = 0;
 
         while (!(queue.isEmpty())) {
             int currentNumbers = queue.remove();
@@ -62,39 +62,38 @@ public class Main {
             for (int pos=0; pos<4; pos++) {
                 for (int number=0; number<=9; number++) {
                     int nextNumbers = changeable(currentNumbers, pos, number);
-                    if (nextNumbers != IMPOSSIBLE) {
+                    if (nextNumbers != -1) {
                         if (prime[nextNumbers] && check[nextNumbers] == false) {
                             queue.add(nextNumbers);
-                            dist[nextNumbers] = dist[currentNumbers] + 1;
                             check[nextNumbers] = true;
+                            dist[nextNumbers] = dist[currentNumbers] + 1;
                         }
                     }
                 }
             }
-
         }
+
         return dist[target];
+
     }
-
-
-
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-        eratos();
 
         int t = Integer.parseInt(br.readLine());
+        eratos();
+
         while (t-- > 0) {
-            init();
             String[] input = br.readLine().split(" ");
             int start = Integer.parseInt(input[0]);
             int target = Integer.parseInt(input[1]);
 
-            int count = bfs(start, target);
-
-            sb.append(count).append("\n");
+            init();
+            int result = bfs(start, target);
+            sb.append(result).append("\n");
         }
+
         System.out.println(sb);
 
     }
