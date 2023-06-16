@@ -15,7 +15,6 @@ public class Main {
 
     static boolean[] prime = new boolean[LIMIT+1];
     static boolean[] check = new boolean[LIMIT+1];
-
     static int[] dist = new int[LIMIT+1];
 
     private static void init() {
@@ -25,9 +24,9 @@ public class Main {
         }
     }
 
-    private static int change(int currentNumbers, int pos, int number) {
+    private static int changeable(int currentNumbers, int pos, int number) {
         if (pos == 0 && number == 0) {
-            return -1;
+            return IMPOSSIBLE;
         }
 
         String currentNumbersToStr = Integer.toString(currentNumbers);
@@ -45,7 +44,7 @@ public class Main {
                 }
             }
         }
-
+				// 소수인 숫자만 true로 저장하고 나머지 숫자들은 false로 저장
         for (int i=0; i<=LIMIT; i++) {
             prime[i] = !prime[i];
         }
@@ -62,7 +61,7 @@ public class Main {
 
             for (int pos=0; pos<4; pos++) {
                 for (int number=0; number<=9; number++) {
-                    int nextNumbers = change(currentNumbers, pos, number);
+                    int nextNumbers = changeable(currentNumbers, pos, number);
                     if (nextNumbers != IMPOSSIBLE) {
                         if (prime[nextNumbers] && check[nextNumbers] == false) {
                             queue.add(nextNumbers);
@@ -92,8 +91,9 @@ public class Main {
             int start = Integer.parseInt(input[0]);
             int target = Integer.parseInt(input[1]);
 
-            int result = bfs(start, target);
-            sb.append(result).append("\n");
+            int count = bfs(start, target);
+
+            sb.append(count).append("\n");
         }
         System.out.println(sb);
 
