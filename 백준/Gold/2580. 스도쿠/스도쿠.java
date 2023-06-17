@@ -1,63 +1,83 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+
 public class Main {
 
-    static final int n = 9;
-    static StringBuilder sb = new StringBuilder();
-    static boolean[][][] check = new boolean[3][n][n+1];
+    static final int N = 9;
+    
+    static final int END = N*N;
+    static boolean[][] usedNumbersInRow = new boolean[N][N+1];
+    static boolean[][] usedNumbersInCol = new boolean[N][N+1];
+    static boolean[][] usedNumbersInSquare = new boolean[N][N+1];
 
-    static int[][] a = new int[n][n];
+    static int[][] board = new int[N][N];
 
-    static int square(int x, int y) {
-        return (x/3) * 3 + (y/3);
+
+    static int convert(int row, int col) {
+        return 3*(row/3) + (col/3);
     }
 
-    static boolean go(int i) {
-        // 정답을 찾은 경우, 모든 칸을 다 채웠을 때
-        if (i == n*n) {
-            for (int x=0; x<n; x++) {
-                for (int y=0; y<n; y++) {
-                    sb.append(a[x][y]).append(" ");
-                }
-                sb.append("\n");
+    static boolean isValidNumber(int row, int col, int number) {
+        if (usedNumbersInRow[row][number] || usedNumbersInCol[col][number] || usedNumbersInSquare[convert(row, col)][number]) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    static void putNumber(int row, int col, int number) {
+        board[row][col] = number;
+
+        usedNumbersInRow[row][number] = true;
+        usedNumbersInCol[col][number] = true;
+        usedNumbersInSquare[convert(row, col)][number] = true;
+    }
+
+    static void init(int row, int col, int number) {
+        board[row][col] = 0;
+        
+        usedNumbersInRow[row][number] = false;
+        usedNumbersInCol[col][number] = false;
+        usedNumbersInSquare[convert(row, col)][number] = false;
+    }
+
+    static StringBuilder getCompletedBoard() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int row=0; row<N; row++) {
+            for (int col=0; col<N; col++) {
+                sb.append(board[row][col]).append(" ");
             }
+            sb.append("\n");
+        }
+
+        return sb;
+    }
+
+    static boolean go(int step) {
+        if (step == END) {
             return true;
         }
 
-        // 다음을 호출하는 경우
-        int x = i/n; int y = i%n;
+        int row = step/N;
+        int col = step%N;
 
-        // 이미 채워진 경우 스킵하고 바로 다음 경우 호출
-        if (a[x][y] != 0) {
-            return go(i+1);
+        if (board[row][col] != 0) {
+            if (go(step+1)) {
+                return true;
+            };
         }
         else {
-            // 채워지지 않은 경우
-            for (int num=1; num<=9; num++) {
-                // 해당 숫자를 사용해도 되는지 확인하기
-                // 행/열/정사각형에서 해당 숫자가 나왔는지 안나왔는지 확인해보기
-                if (check[0][x][num] == false
-                        && check[1][y][num] == false
-                        && check[2][square(x, y)][num] == false) {
-                    // 안나온 경우
-                    // 세팅
-                    a[x][y] = num;
-                    check[0][x][num] = true;
-                    check[1][y][num] = true;
-                    check[2][square(x, y)][num] = true;
+            for (int number=1; number<=N; number++) {
+                if (isValidNumber(row, col, number) == false) continue;
 
-                    // 다음 경우 호출
-                    if (go(i + 1)) {
-                        return true;
-                    }
-                    ;
+                putNumber(row, col, number);
 
-                    // 초기화
-                    a[x][y] = 0;
-                    check[0][x][num] = false;
-                    check[1][y][num] = false;
-                    check[2][square(x, y)][num] = false;
-
+                if (go(step+1)) {
+                    return true;
+                }
+                else {
+                    init(row, col, number);
                 }
             }
         }
@@ -66,28 +86,38 @@ public class Main {
 
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        // 보드판 세팅해주기
-        for (int i=0; i<n; i++) {
-            String[] line = br.readLine().split(" ");
-            for (int j=0; j<n; j++) {
-                int num = line[j].charAt(0) - '0';
-                a[i][j] = num;
 
-                if (num != 0) {
-                    // 세팅해주기(행, 열, 정사각형)
-                    check[0][i][num] = true;
-                    check[1][j][num] = true;
-                    check[2][square(i, j)][num] = true;
+        // implement given board
+        for (int row=0; row<N; row++) {
+            String[] input = br.readLine().split(" ");
+            for (int col=0; col<N; col++) {
+                board[row][col] = input[col].charAt(0) - '0';
+            }
+        }
+
+        // set initial state of given board
+        for (int row=0; row<N; row++) {
+            for (int col=0; col<N; col++) {
+                if (board[row][col] != 0) {
+                    int number = board[row][col];
+                    usedNumbersInRow[row][number] = true;
+                    usedNumbersInCol[col][number] = true;
+                    usedNumbersInSquare[convert(row, col)][number] = true;
                 }
             }
         }
 
-        if (go(0)) {
-            System.out.println(sb);
-        } else {
+        boolean ok = go(0);
+        
+        if (ok) {
+            StringBuilder completedBoard = getCompletedBoard();
+            System.out.println(completedBoard);
+        }
+        else {
             System.out.println(-1);
-        };
+        }
+
     }
 }
