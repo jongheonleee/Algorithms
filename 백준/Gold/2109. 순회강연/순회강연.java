@@ -1,17 +1,24 @@
 import java.util.*;
+import java.io.*;
+
 class Lecture implements Comparable<Lecture> {
-    int p, d;
-    Lecture(int p, int d) {
-        this.p = p;
-        this.d = d;
+    int price;
+    int day;
+
+    Lecture(int price, int day) {
+        this.price = price;
+        this.day = day;
     }
+
+    // d에 대해서 내림차순 적용
+    @Override
     public int compareTo(Lecture that) {
-        if (this.d < that.d) {
+        if (this.day < that.day) {
             return 1;
-        } else if (this.d == that.d) {
-            if (this.p < that.p) {
+        } else if (this.day == that.day) {
+            if (this.price < that.price) {
                 return -1;
-            } else if (this.p == that.p) {
+            } else if (this.price == that.price) {
                 return 0;
             } else {
                 return 1;
@@ -21,27 +28,37 @@ class Lecture implements Comparable<Lecture> {
         }
     }
 }
+
+
 public class Main {
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        Lecture[] a = new Lecture[n];
+
+    private static final int MAX = 10000;
+    public static void main(String args[]) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        Lecture[] list = new Lecture[n];
+
         for (int i=0; i<n; i++) {
-            a[i] = new Lecture(sc.nextInt(), sc.nextInt());
+            String[] line = br.readLine().split(" ");
+            list[i] = new Lecture(Integer.parseInt(line[0]), Integer.parseInt(line[1]));
         }
-        Arrays.sort(a);
-        int k = 0;
+
+        Arrays.sort(list);
         PriorityQueue<Integer> q = new PriorityQueue<>();
-        int ans = 0;
-        for (int i=10000; i>=1; i--) {
-            while (k < n && a[k].d == i) {
-                q.offer(-a[k].p);
-                k += 1;
+        int ans = 0, k = 0;
+
+
+        for (int i=MAX; i>=1; i--) {
+            while (k < n && list[k].day == i) {
+                q.offer(-list[k].price);
+                k++;
             }
-            if (!q.isEmpty()) {
+
+            if (!(q.isEmpty())) {
                 ans += -q.poll();
             }
         }
+
         System.out.println(ans);
     }
 }
