@@ -1,27 +1,41 @@
 import java.util.*;
+import java.io.*;
+
 public class Main {
-    public static String pop_back(String s) {
-        return s.substring(0, s.length()-1);
+
+    static final int IMPOSSIBLE = 0;
+    static final int POSSIBLE = 1;
+
+    static String popBack(String str) {
+        return str.substring(0, str.length()-1);
+
     }
-    public static String reverse(String s) {
-        return new StringBuilder(s).reverse().toString();
+
+    static String reverse(String str) {
+        return new StringBuilder(str).reverse().toString();
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        String s = sc.next();
-        String t = sc.next();
-        while (t.length() > s.length()) {
-            if (t.charAt(t.length()-1) == 'A') {
-                t = pop_back(t);
-            } else {
-                t = pop_back(t);
-                t = reverse(t);
+
+    public static void main(String args[]) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String src = br.readLine();
+        String dst = br.readLine();
+
+        while (src.length() < dst.length()) {
+            if (dst.charAt(dst.length()-1) == 'A') {
+                dst = popBack(dst);
+            }
+
+            else {
+                dst = popBack(dst);
+                dst = reverse(dst);
             }
         }
-        if (s.equals(t)) {
-            System.out.println(1);
+
+        if (src.equals(dst) == true) {
+            System.out.println(POSSIBLE);
         } else {
-            System.out.println(0);
+            System.out.println(IMPOSSIBLE);
         }
+
     }
 }
