@@ -1,46 +1,56 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        int k = sc.nextInt();
+
+    static final int IMPOSSIBLE = -1;
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = br.readLine().split(" ");
+
+        int n = Integer.parseInt(line[0]), m = Integer.parseInt(line[1]), k = Integer.parseInt(line[2]);
+
         if (m+k-1 <= n && n <= m*k) {
             int[] a = new int[n];
             for (int i=0; i<n; i++) {
                 a[i] = i+1;
             }
-            ArrayList<Integer> group = new ArrayList<Integer>();
-            group.add(0);
-            group.add(k);
-            n -= k;
-            m -= 1;
-            int group_size = m == 0 ? 1 : n/m;
+
+            ArrayList<Integer> groups = new ArrayList<>();
+
+            groups.add(0); groups.add(k);
+            n -= k; m -= 1;
+
+            int groupSize = m == 0 ? 1 : n/m;
             int r = m == 0 ? 0 : n%m;
+
             for (int i=0; i<m; i++) {
-                group.add(group.get(group.size()-1)+group_size + (r > 0 ? 1 : 0));
-                if (r > 0) {
-                    r -= 1;
-                }
+                groups.add(groups.get(groups.size()-1) + groupSize + (r > 0 ? 1 : 0));
+
+                if (r > 0) r--;
             }
-            for (int i=0; i<group.size()-1; i++) {
-                int begin = group.get(i);
-                int end = group.get(i+1)-1;
+
+            for (int i=0; i<groups.size()-1; i++) {
+                int begin = groups.get(i), end = groups.get(i+1)-1;
+
                 while (begin < end) {
-                    int temp = a[begin];
+                    int tmp = a[begin];
                     a[begin] = a[end];
-                    a[end] = temp;
-                    begin += 1;
-                    end -= 1;
+                    a[end] = tmp;
+
+                    begin++; end--;
                 }
             }
+
             for (int i=0; i<a.length; i++) {
                 System.out.print(a[i] + " ");
             }
             System.out.println();
-        } else {
-            System.out.println(-1);
+        }
+        else {
+            System.out.println(IMPOSSIBLE);
         }
     }
 }
