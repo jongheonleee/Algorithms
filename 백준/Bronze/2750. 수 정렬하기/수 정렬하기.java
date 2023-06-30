@@ -31,6 +31,43 @@ public class Main {
         merge(start, end);
     }
 
+    private static int choosePivot(int low, int high) {
+        return (low+high)/2;
+    }
+
+    private static int partition(int low, int high) {
+        int pivotIdx = choosePivot(low, high);
+        int pivotVal = a[pivotIdx];
+
+        swap(pivotIdx, high);
+
+        int storeIdx = low;
+        for (int i=low; i<high; i++) {
+            if (a[i] < pivotVal) {
+                swap(i, storeIdx);
+                storeIdx++;
+            }
+        }
+
+        swap(storeIdx, high);
+        return storeIdx;
+
+    }
+
+    private static void quickSort(int low, int high) {
+        if (low < high) {
+            int pivot = partition(low, high);
+            quickSort(low, pivot-1);
+            quickSort(pivot+1, high);
+        }
+    }
+
+    private static void swap(int i, int j) {
+        int tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+    }
+
     public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
@@ -41,7 +78,9 @@ public class Main {
         for (int i=0; i<n; i++) {
             a[i] = Integer.parseInt(br.readLine());
         }
-        merge_sort(0, n-1);
+//        merge_sort(0, n-1);
+
+        quickSort(0, n-1);
 
         for (int i=0; i<n; i++) {
             System.out.println(a[i]);
