@@ -1,29 +1,44 @@
+import java.io.*;
 import java.util.*;
-public class Main {
-    static int[] inorder = new int[100000];
-    static int[] postorder = new int[100000];
-    static int[] position = new int[100001];
-    static void solve(int in_start, int in_end, int post_start, int post_end) {
-        if (in_start > in_end || post_start > post_end) return;
-        int root = postorder[post_end];
-        System.out.print(root + " ");
-        int p = position[root];
 
-        int left = p-in_start;
-        solve(in_start, p-1, post_start, post_start + left - 1);
-        solve(p+1, in_end, post_start+left, post_end-1);
+public class Main {
+    static final int LIMIT = 100_000;
+    static int[] inOrder = new int[LIMIT+1];
+    static int[] postOrder = new int[LIMIT+1];
+
+    static int[] positions = new int[LIMIT+1];
+
+    static void solve(int inStart, int inEnd, int postStart, int postEnd) {
+        if (inStart > inEnd || postStart > postEnd) return;
+
+        // extract root in post order
+        int root = postOrder[postEnd];
+        System.out.print(root + " ");
+
+        // divide into two trees
+        int rootPos = positions[root];
+        int left = rootPos - inStart;
+
+        solve(inStart, rootPos-1, postStart, postStart + left - 1);
+        solve(rootPos+1, inEnd, postStart + left, postEnd-1);
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
+
+    public static void main(String args[]) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+
+        String[] lineInOrder = br.readLine().split(" ");
         for (int i=0; i<n; i++) {
-            inorder[i] = sc.nextInt();
+            inOrder[i] = Integer.parseInt(lineInOrder[i]);
         }
+
+        String[] linePostOrder = br.readLine().split(" ");
         for (int i=0; i<n; i++) {
-            postorder[i] = sc.nextInt();
+            postOrder[i] = Integer.parseInt(linePostOrder[i]);
         }
+
         for (int i=0; i<n; i++) {
-            position[inorder[i]] = i;
+            positions[inOrder[i]] = i;
         }
         solve(0, n-1, 0, n-1);
     }
