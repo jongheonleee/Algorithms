@@ -1,59 +1,71 @@
 import java.util.*;
 import java.io.*;
 class Building implements Comparable<Building> {
-    int left, height, right;
-    Building(int left, int height, int right) {
-        this.left = left;
+    int start, end, height;
+
+    Building(int start, int end, int height) {
+        this.start = start;
+        this.end = end;
         this.height = height;
-        this.right = right;
     }
+
+    @Override
     public int compareTo(Building that) {
-        if (this.left < that.left) {
+        if (this.start < that.start) {
             return -1;
-        } else if (this.left == that.left) {
+        } else if (this.start == that.start) {
             if (this.height < that.height) {
                 return -1;
             } else if (this.height == that.height) {
-                if (this.right < that.right) {
+                if (this.end < that.end) {
                     return 1;
-                } else if (this.right == that.right) {
+                } else if (this.end == that.end) {
                     return 0;
-                } else {
+                }
+                else {
                     return -1;
                 }
-            } else {
+            }
+            else {
                 return 1;
             }
-        } else {
+        }
+        else {
             return 1;
         }
     }
 }
 class Pair {
     int x, height;
+
     Pair(int x, int height) {
         this.x = x;
         this.height = height;
     }
 }
+
 class Result {
     ArrayList<Pair> ans;
     Result() {
         this.ans = new ArrayList<>();
     }
+
     Pair get(int index) {
         return ans.get(index);
     }
+
     int size() {
         return ans.size();
     }
+
     void append(Pair p) {
-        int n = ans.size();
+        int n = size();
+
         if (n > 0) {
             Pair last = ans.get(n-1);
-            if (last.height == p.height) {
-                return;
-            }
+
+            if (last.height == p.height) return;
+
             if (last.x == p.x) {
                 last.height = p.height;
                 ans.remove(n-1);
@@ -61,74 +73,87 @@ class Result {
                 return;
             }
         }
+
         ans.add(p);
     }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Pair p : ans) {
-            sb.append(p.x + " " + p.height + " ");
+            sb.append(p.x).append(" ").append(p.height).append(" ");
         }
+
         return sb.toString();
     }
 }
 public class Main {
-    static Result merge(Result l, Result r) {
+
+    static Result merge(Result left, Result right) {
         Result ans = new Result();
-        int h1 = 0;
-        int h2 = 0;
-        int i = 0;
-        int j = 0;
-        while (i < l.size() && j < r.size()) {
-            Pair u = l.get(i);
-            Pair v = r.get(j);
+        int i = 0, j = 0, h1 = 0, h2 = 0;
+
+        while (i < left.size() && j < right.size()) {
+            Pair u = left.get(i);
+            Pair v = right.get(j);
+
             if (u.x < v.x) {
                 int x = u.x;
                 h1 = u.height;
                 int h = Math.max(h1, h2);
                 ans.append(new Pair(x, h));
-                i += 1;
-            } else {
+                i++;
+            }
+            else {
                 int x = v.x;
                 h2 = v.height;
                 int h = Math.max(h1, h2);
                 ans.append(new Pair(x, h));
-                j += 1;
+                j++;
             }
         }
-        while (i < l.size()) {
-            ans.append(l.get(i));
-            i += 1;
+
+        while (i < left.size()) {
+            ans.append(left.get(i));
+            i++;
         }
-        while (j < r.size()) {
-            ans.append(r.get(j));
-            j += 1;
+
+        while (j < right.size()) {
+            ans.append(right.get(j));
+            j++;
         }
+
         return ans;
     }
+
     static Result go(Building[] a, int start, int end) {
         if (start == end) {
             Result ans = new Result();
-            ans.append(new Pair(a[start].left, a[start].height));
-            ans.append(new Pair(a[start].right, 0));
+            ans.append(new Pair(a[start].start, a[start].height));
+            ans.append(new Pair(a[start].end, 0));
+
             return ans;
         }
-        int mid = (start + end) / 2;
-        Result l = go(a, start, mid);
-        Result r = go(a, mid+1, end);
-        return merge(l, r);
+
+        int mid = (start+end)/2;
+        Result left = go(a, start, mid);
+        Result right = go(a, mid+1, end);
+
+        return merge(left, right);
     }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
         Building[] a = new Building[n];
+
         for (int i=0; i<n; i++) {
             String[] line = br.readLine().split(" ");
-            int l = Integer.parseInt(line[0]);
-            int h = Integer.parseInt(line[1]);
-            int r = Integer.parseInt(line[2]);
-            a[i] = new Building(l, h, r);
+            int start = Integer.parseInt(line[0]);
+            int height = Integer.parseInt(line[1]);
+            int end = Integer.parseInt(line[2]);
+            a[i] = new Building(start, end, height);
         }
+
         Arrays.sort(a);
         Result ans = go(a, 0, n-1);
         System.out.println(ans.toString());
