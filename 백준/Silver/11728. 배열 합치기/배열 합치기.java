@@ -1,44 +1,54 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+
 
 public class Main {
 
+    private static int[] merge(int[] a, int[] b) {
+        int l = 0, r = 0, k = 0;
+        int[] res = new int[a.length + b.length];
 
-    public static void main(String args[]) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
-        int n = Integer.parseInt(st.nextToken()), m = Integer.parseInt(st.nextToken());
-
-        int[] a = new int[n], b = new int[m], merge = new int[n+m];
-        int i=0, j=0, k=0;
-
-        String[] line1 = br.readLine().split(" ");
-        for (int z=0; z<n; z++) {
-            a[z] = Integer.parseInt(line1[z]);
-        }
-
-        String[] line2 = br.readLine().split(" ");
-        for (int z=0; z<m; z++) {
-            b[z] = Integer.parseInt(line2[z]);
-        }
-
-        // compare a[i] and b[j] then push small one in merge
-        while (i < n && j < m && k < n+m) {
-            if (a[i] >= b[j]) {
-                merge[k++] = b[j++];
+        while (l < a.length && r < b.length) {
+            if (a[l] <= b[r]) {
+                res[k++] = a[l++];
             }
             else {
-                merge[k++] = a[i++];
+                res[k++] = b[r++];
             }
         }
 
-        while (i < n && k < n+m) merge[k++] = a[i++];
-        while (j < m && k < n+m) merge[k++] = b[j++];
+        while (l < a.length) res[k++] = a[l++];
+        while (r < b.length) res[k++] = b[r++];
 
-        for (int z=0; z<n+m; z++) {
-            sb.append(merge[z]).append(" ");
+        return res;
+    }
+
+
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] size = br.readLine().split(" ");
+        int n = Integer.parseInt(size[0]);
+        int m = Integer.parseInt(size[1]);
+        int[] a = new int[n];
+        int[] b = new int[m];
+
+        String[] line1 = br.readLine().split(" ");
+        for (int i=0; i<n; i++) {
+            a[i] = Integer.parseInt(line1[i]);
+        }
+        String[] line2 = br.readLine().split(" ");
+        for (int j=0; j<m; j++) {
+            b[j] = Integer.parseInt(line2[j]);
+        }
+
+        int[] res = merge(a, b);
+        StringBuilder sb = new StringBuilder();
+        for (int r : res) {
+            sb.append(r).append(" ");
         }
         System.out.println(sb);
+
+
     }
 }
