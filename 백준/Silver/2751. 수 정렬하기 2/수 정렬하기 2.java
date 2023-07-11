@@ -1,49 +1,54 @@
 import java.util.*;
 import java.io.*;
 
+
+
+
 public class Main {
 
-
-    static int[] merge(int[] left, int[] right) {
-        int[] ans = new int[left.length+ right.length];
-        int i = 0, j = 0, k = 0;
-
-        while (i < left.length && j < right.length) {
-            if (left[i] <= right[j]) ans[k++] = left[i++];
-            else ans[k++] = right[j++];
+    static void show(int[] a) {
+        StringBuilder sb = new StringBuilder();
+        for (int i : a) {
+            sb.append(i).append("\n");
         }
-
-        while (i < left.length) ans[k++] = left[i++];
-        while (j < right.length) ans[k++] = right[j++];
-
-        return ans;
+        System.out.println(sb);
     }
 
-    static int[] merge_sort(int[] a, int start, int end){
-        if (start == end) {
-            int[] tmp = new int[1];
-            tmp[0] = a[start];
-            return tmp;
+    static void merge(int[] a, int ls, int le, int rs, int re) {
+        int[] tmp = new int[(le-ls+1) + (re-rs+1)];
+        int i = ls, j = rs, k = 0;
+
+        while (i < rs && j < re+1) {
+            if (a[i] <= a[j]) tmp[k++] = a[i++];
+            else tmp[k++] = a[j++];
         }
 
-        int mid = (start+end)/2;
-        int[] left = merge_sort(a, start, mid);
-        int[] right = merge_sort(a, mid+1, end);
+        while (i<rs) tmp[k++] = a[i++];
+        while (j<re+1) tmp[k++] = a[j++];
 
-        return merge(left, right);
+        for (int z=ls; z<=re; z++) {
+            a[z] = tmp[z-ls];
+        }
+    }
+
+    static void merge_sort(int[] a, int start, int end) {
+        if (start == end) return;
+
+        int mid = start + (end-start)/2;
+        merge_sort(a, start, mid);
+        merge_sort(a, mid+1, end);
+        merge(a, start, mid, mid+1, end);
     }
 
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(br.readLine());
         int[] a = new int[n];
+
         for (int i=0; i<n; i++) a[i] = Integer.parseInt(br.readLine());
-        int[] ans = merge_sort(a, 0, n-1);
-        for (int i=0; i<n; i++) {
-            bw.write(ans[i] + "\n");
-        }
-        bw.flush();
+        merge_sort(a, 0, n-1);
+        show(a);
+
     }
 }
