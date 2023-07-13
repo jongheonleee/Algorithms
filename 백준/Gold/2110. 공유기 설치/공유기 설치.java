@@ -1,38 +1,50 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    public static boolean possible(int[] a, int c, int mid) {
+
+
+    static boolean possible(int[] a, int k, int c) {
         int cnt = 1;
         int last = a[0];
-        for (int house : a) {
-            if (house - last >= mid) {
-                cnt += 1;
-                last = house;
+
+        for (int h : a) {
+            if (h - last >= k) {
+                cnt++;
+                last = h;
             }
         }
+
         return cnt >= c;
     }
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int c = sc.nextInt();
+
+
+    public static void main(String args[]) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken()), c = Integer.parseInt(st.nextToken());
+
         int[] a = new int[n];
-        for (int i=0; i<n; i++) {
-            a[i] = sc.nextInt();
-        }
+        for (int i=0; i<n; i++) a[i] = Integer.parseInt(br.readLine());
         Arrays.sort(a);
-        int ans = 1;
-        int l = 1;
-        int r = a[n-1]-a[0];
-        while (l <= r) {
-            int mid = (l+r)/2;
-            if (possible(a, c, mid)) {
-                ans = Math.max(ans,mid);
-                l = mid+1;
+
+        int left = 1, right = a[n-1]-a[0], ans = 0;
+
+        while (left <= right) {
+            int mid = (left+right)/2;
+
+            if (possible(a, mid, c)) {
+                ans = mid;
+                left = mid+1;
             } else {
-                r = mid-1;
+                right = mid-1;
             }
         }
         System.out.println(ans);
+
+
     }
 }
