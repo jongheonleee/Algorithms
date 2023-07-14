@@ -1,7 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
-import java.io.*;
-
-
 
 
 public class Main {
@@ -12,21 +12,26 @@ public class Main {
         for (int start=1, len=1; start<=n; start*=10, len++) {
             int end = start*10-1;
             if (end > n) {
-                end = n;
+                    end = n;
             }
 
             ans += (long)(end-start+1)*len;
         }
-
+        
         return ans;
+    }
 
+    static boolean check(int n, long k) {
+        long cnt = calc(n);
+        return cnt>=k;
     }
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] line = br.readLine().split(" ");
-        int n = Integer.parseInt(line[0]);
-        long k = Long.parseLong(line[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        long k = Long.parseLong(st.nextToken());
 
         if (k > calc(n)) {
             System.out.println(-1);
@@ -36,21 +41,23 @@ public class Main {
         int left = 1, right = n, ans = 0;
 
         while (left <= right) {
-            int mid = (left+right)/2;
-            long len = calc(mid);
+            int mid = left + (right-left)/2;
 
-            if (len < k) {
-                left = mid+1;
-            } else {
+            if (check(mid, k)) {
                 ans = mid;
                 right = mid-1;
+            } else {
+                left = mid+1;
             }
         }
 
+
         String s = Integer.toString(ans);
         long l = calc(ans);
+        int idx = s.length() - (int)(l-k+1);
+        System.out.println(s.charAt(idx));
 
-        System.out.println(s.charAt(s.length()-(int)(l-k+1)));
+
 
     }
 }
