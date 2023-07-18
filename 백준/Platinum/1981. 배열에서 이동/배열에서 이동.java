@@ -18,7 +18,6 @@ public class Main {
     static int[][] a = new int[100][100];
     static boolean[][] visited = new boolean[100][100];
 
-
     static boolean check(int diff) {
         for (int min = 0; min+diff <= 200; min++) {
             if (bfs(min, min+diff)) return true;
