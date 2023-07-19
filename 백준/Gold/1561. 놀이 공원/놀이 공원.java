@@ -9,10 +9,7 @@ public class Main {
         for (int i=0; i<n; i++) {
             a[i] = sc.nextInt();
         }
-        if (p <= n) {
-            System.out.println(p);
-            return;
-        }
+
         long left = 0;
         long right = 2000000000L * 1000000L;
         while (left <= right) {
