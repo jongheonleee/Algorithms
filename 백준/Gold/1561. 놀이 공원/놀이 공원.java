@@ -4,46 +4,53 @@ import java.util.*;
 
 public class Main {
 
+    static final long MAX = 2_000_000_000 * 300_000L;
+
     public static void main(String args[]) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int p = sc.nextInt();
-        int n = sc.nextInt();
-        int[] a = new int[n];
-        for (int i=0; i<n; i++) {
-            a[i] = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken()), m = Integer.parseInt(st.nextToken());
+        String[] line = br.readLine().split(" ");
+        int[] a = new int[m];
+        for (int i=0; i<m; i++) {
+            a[i] = Integer.parseInt(line[i]);
         }
 
-        long left = 0, right = 2_000_000_000L * 1_000_000L;
 
+        long left = 0, right = MAX;
         while (left <= right) {
             long mid = (left+right)/2;
 
-            long begin = 0, end = n;
-
-            for (int i=0; i<n; i++) end += mid/a[i];
-
+            long begin = 0, end = m;
+            for (int i=0; i<m; i++) {
+                end += mid/a[i];
+            }
             begin = end;
-            for (int i=0; i<n; i++) {
-                if (mid % a[i] == 0) begin -= 1;
+            for (int i=0; i<m; i++) {
+                if (mid%a[i] == 0) {
+                    begin--;
+                }
             }
-            begin += 1;
-            if (p < begin) {
+            begin++;
+
+            if (begin > n) {
                 right = mid-1;
-            } else if (p > end) {
+            } else if (end < n) {
                 left = mid+1;
-            }
-            else {
-                for (int i=0; i<n; i++) {
-                    if (mid % a[i] == 0) {
-                        if (p == begin) {
+            } else {
+                for (int i=0; i<m; i++) {
+                    if (mid%a[i] == 0) {
+                        if (begin == n) {
                             System.out.println(i+1);
                             return;
                         }
-                        begin += 1;
+                        begin++;
                     }
-
                 }
             }
         }
+
+
     }
 }
