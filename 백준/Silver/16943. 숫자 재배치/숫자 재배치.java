@@ -6,15 +6,6 @@ import java.util.*;
 public class Main {
 
     static int b;
-    static int power10(int k) {
-        int n = 1;
-
-        for (int i=0; i<k; i++) {
-            n *= 10;
-        }
-
-        return n;
-    }
 
     static boolean next_permutation(int[] a) {
         int i = a.length-1;
@@ -64,11 +55,13 @@ public class Main {
             a[i] = num;
         }
         Arrays.sort(a);
+        int limit = 1;
+        for (int i=0; i<a.length-1; i++) limit *= 10;
 
         int ans = -1;
         do {
             int c = arrToInt(a);
-            if (power10(a.length-1) < c && c < b) ans = c;
+            if (limit <= c && c < b) ans = c;
         } while (next_permutation(a));
 
         System.out.println(ans);
