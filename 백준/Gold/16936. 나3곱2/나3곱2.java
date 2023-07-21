@@ -1,14 +1,15 @@
 import java.io.*;
 import java.util.*;
 
-class Pair implements Comparable<Pair> {
-    int three;
+class Pair implements Comparable<Pair>{
     long num;
+    int three;
 
-    Pair(int three, long num) {
-        this.three = three;
+    Pair(long num, int three) {
         this.num = num;
+        this.three = three;
     }
+
 
     @Override
     public int hashCode() {
@@ -35,15 +36,18 @@ class Pair implements Comparable<Pair> {
         if (this.three > that.three) {
             return -1;
         } else if (this.three == that.three) {
-            if (this.num < that.num) return -1;
-            else if (this.num == that.num)  return 0;
-            else return 1;
+            if (this.num < that.num) {
+                return -1;
+            } else if (this.num == that.num) {
+                return 0;
+            } else {
+                return 1;
+            }
         } else {
             return 1;
         }
     }
 }
-
 
 
 public class Main {
@@ -58,12 +62,14 @@ public class Main {
         for (int i=0; i<n; i++) {
             long num = Long.parseLong(line[i]);
             int three = 0;
-            for (long j=num; j%3 == 0; j/=3) {
-                three += 1;
+
+            for (long j=num; j%3==0; j/=3) {
+                three++;
             }
-            a[i] = new Pair(three, num);
+            a[i] = new Pair(num, three);
         }
         Arrays.sort(a);
+
         for (int i=0; i<n; i++) {
             sb.append(a[i].num).append(" ");
         }
