@@ -7,6 +7,7 @@ public class Main {
 
     static int[] a;
     static int n, l, r, x;
+    
     static boolean isValidRange(int[] t) {
         int sum = 0;
         for (int i=0; i<t.length; i++) {
@@ -21,7 +22,11 @@ public class Main {
         return t[t.length-1] - t[0] >= x;
     }
 
-    static boolean go(int bit) {
+    static boolean isMoreThanTwo(int[] t) {
+        return t.length >= 2;
+    }
+
+    static boolean check(int bit) {
         int c = 0;
 
         for (int i=0; i<n; i++) {
@@ -40,7 +45,7 @@ public class Main {
             }
         }
 
-        return isValidRange(t) && isValidDiff(t);
+        return isValidRange(t) && isValidDiff(t) && isMoreThanTwo(t);
     }
 
     public static void main(String args[]) throws IOException {
@@ -60,16 +65,8 @@ public class Main {
 
         int ans = 0;
         for (int k=0; k<(1<<n); k++) {
-            if (go(k)) {
-                int cnt = 0;
-                for (int i=0; i<n; i++) {
-                    if ((k&(1<<i)) != 0) {
-                        cnt++;
-                    }
-                }
-                if (cnt >= 2) {
-                    ans++;
-                }
+            if (check(k)) {
+                ans++;
             }
         }
         System.out.println(ans);
