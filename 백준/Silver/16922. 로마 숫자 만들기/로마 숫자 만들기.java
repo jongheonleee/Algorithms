@@ -4,34 +4,27 @@ import java.util.*;
 
 public class Main {
 
-    static final int MAX = 50 * 20;
-    static boolean[] check = new boolean[MAX+1];
-    static int[] a = {1, 5, 10, 50};
-
-    static void go(int n, int idx, int num) {
-        if (n == 0) {
-            check[num] = true;
-            return;
-        }
-
-
-        for (int i=idx; i<4; i++) {
-            go(n-1, i, num + a[i]);
-        }
-    }
+    static boolean[] check = new boolean[1001];
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-        go(n, 0, 0);
-        int ans = 0;
 
-        for (int i=1; i<=MAX; i++) {
+        for (int i=0; i<=n; i++) {
+            for (int j=0; j<=n-i; j++) {
+                for (int k=0; k<=n-(i+j); k++) {
+                    int l = n - (i + j + k);
+                    int number = 1*i + 5*j + 10*k + 50*l;
+                    check[number] = true;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int i=0; i<1001; i++) {
             if (check[i]) ans++;
         }
 
         System.out.println(ans);
-
-
     }
 }
