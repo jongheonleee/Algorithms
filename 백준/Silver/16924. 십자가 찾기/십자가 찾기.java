@@ -1,46 +1,28 @@
 import java.io.*;
 import java.util.*;
 
-
 public class Main {
 
     static final int IMPOSSIBLE = -1;
-
     static char[][] a;
     static boolean[][] check;
-    static boolean isValidRange(int x, int y) {
-        if (0 <= x && x < a.length && 0 <= y && y < a[0].length) return true;
-        return false;
-    }
-
-    static int moveUp(int x, int y, int len) {
-        if (!isValidRange(x, y) || a[x][y] == '.') return len;
-        return moveUp(x-1, y, len+1);
-    }
-
-    static int moveDown(int x, int y, int len) {
-        if (!isValidRange(x, y) || a[x][y] == '.') return len;
-        return moveDown(x+1, y, len+1);
-    }
-
-    static int moveLeft(int x, int y, int len) {
-        if (!isValidRange(x, y) || a[x][y] == '.') return len;
-        return moveLeft(x, y-1, len+1);
-    }
-
-    static int moveRight(int x, int y, int len) {
-        if (!isValidRange(x, y) || a[x][y] == '.')return len;
-        return moveRight(x, y+1, len+1);
-    }
     static int go(int x, int y) {
-        int lenUp = moveUp(x-1, y, 0);
-        int lenDown = moveDown(x+1, y, 0);
-        int lenLeft = moveLeft(x, y-1, 0);
-        int lenRight = moveRight(x, y+1, 0);
+        int size = 0, len = 1;
 
-        int[] tmp = {lenUp, lenDown, lenLeft, lenRight};
-        Arrays.sort(tmp);
-        return tmp[0];
+        while (true) {
+            int x1 = x+len, y1 = y;
+            int x2 = x-len, y2 = y;
+            int x3 = x, y3 = y+len;
+            int x4 = x, y4 = y-len;
+
+            if (0 > x-len || x+len >= a.length || 0 > y-len || y+len >= a[0].length) break;
+            if (!(a[x1][y1] == '*' && a[x2][y2] == '*' && a[x3][y3] == '*' && a[x4][y4] == '*')) break;
+
+            len++; size++;
+        }
+
+
+        return size;
     }
 
     public static void main(String args[]) throws IOException {
@@ -55,25 +37,27 @@ public class Main {
         check = new boolean[n][m];
 
         for (int i=0; i<n; i++) {
-            String line = br.readLine();
-            a[i] = line.toCharArray();
+            a[i] = br.readLine().toCharArray();
         }
 
-        int cnt = 0;
+        int ans = 0;
         for (int i=0; i<n; i++) {
             for (int j=0; j<m; j++) {
-                if (a[i][j] == '*' ) {
+                if (a[i][j] == '*') {
                     int size = go(i, j);
-                    cnt += size;
-                    while (size > 0) {
-                        sb.append(i+1).append(" ").append(j+1)
-                                .append(" ").append(size).append("\n");
+
+                    if (size > 0) {
                         check[i][j] = true;
-                        check[i-size][j] = true;
-                        check[i][j+size] = true;
-                        check[i][j-size] = true;
-                        check[i+size][j] = true;
-                        size--;
+
+                        while (size>0) {
+                            check[i+size][j] = true;
+                            check[i][j+size] = true;
+                            check[i-size][j] = true;
+                            check[i][j-size] = true;
+                            sb.append(i+1).append(" ").append(j+1).append(" ").append(size).append("\n");
+                            ans++;
+                            size--;
+                        }
                     }
                 }
             }
@@ -88,9 +72,7 @@ public class Main {
             }
         }
 
-        System.out.println(cnt);
+        System.out.println(ans);
         System.out.println(sb);
-
-
     }
 }
