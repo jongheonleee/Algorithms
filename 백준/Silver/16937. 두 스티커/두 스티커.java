@@ -1,70 +1,50 @@
 import java.io.*;
 import java.util.*;
 
-class Sticker {
-    int height, width;
-
-    Sticker(int height, int width) {
-        this.height = height;
-        this.width = width;
-    }
-
-    void rotation() {
-        int tmp = this.height;
-        this.height = this.width;
-        this.width = tmp;
-    }
-}
-
 public class Main {
 
-    static int R, C;
-    static int ans = 0;
-    static void check(Sticker s1, Sticker s2) {
-        int maxHeight = s1.height + s2.height;
-        int maxWidth = s1.width + s2.width;
-
-
-        if (maxHeight <= R && Math.max(s1.width, s2.width) <= C|| maxWidth <= C && Math.max(s1.height, s2.height) <= R) {
-            int size = (s1.height * s1.width) + (s2.height * s2.width);
-            if (ans < size)
-                ans = size;
-
-        }
-    }
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
 
+        int h = Integer.parseInt(st.nextToken());
+        int w = Integer.parseInt(st.nextToken());
         int n = Integer.parseInt(br.readLine());
-        Sticker[] stickers = new Sticker[n];
+
+        int[] r = new int[n], c = new int[n];
         for (int i=0; i<n; i++) {
             String[] line = br.readLine().split(" ");
-            stickers[i] = new Sticker(Integer.parseInt(line[0]), Integer.parseInt(line[1]));
+            r[i] = Integer.parseInt(line[0]);
+            c[i] = Integer.parseInt(line[1]);
         }
 
+        int ans = 0;
         for (int i=0; i<n-1; i++) {
             for (int j=i+1; j<n; j++) {
-                Sticker s1 = stickers[i], s2 = stickers[j];
-                // 노회전
-                check(s1, s2);
-                // s1만 회전
-                s1.rotation();
-                check(s1, s2);
-                // s2만 회전
-                s1.rotation();
-                s2.rotation();
-                check(s1, s2);
-                // 둘 다 회전
-                s1.rotation();
-                check(s1, s2);
+                int r1 = r[i], c1 = c[i];
+                int r2 = r[j], c2 = c[j];
+
+                for (int rot1=0; rot1<2; rot1++) {
+                    for (int rot2=0; rot2<2; rot2++) {
+                        if (r1+r2<=h && Math.max(c1, c2)<=w) {
+                            int s = (r1*c1) + (r2*c2);
+                            if (ans < s) ans = s;
+                        }
+
+                        if (Math.max(r1, r2)<=h && c1+c2<=w) {
+                            int s = (r1*c1) + (r2*c2);
+                            if (ans < s) ans = s;
+                        }
+                        int t2 = r2;
+                        r2 = c2; c2 = t2;
+                    }
+                    int t1 = r1;
+                    r1 = c1; c1 = t1;
+                }
 
             }
         }
-
         System.out.println(ans);
     }
 }
