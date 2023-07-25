@@ -2,36 +2,31 @@ import java.io.*;
 import java.util.*;
 
 
-
 public class Main {
-
-    static int b;
 
     static boolean next_permutation(int[] a) {
         int i = a.length-1;
-        while (i > 0 && a[i-1] >= a[i]) i--;
+        while (i>0 && a[i-1] >= a[i]) i--;
 
         if (i<=0) return false;
 
         int j = a.length-1;
-        while (a[j] <= a[i-1]) j --;
+        while (a[j] <= a[i-1]) j--;
 
         int tmp = a[i-1];
-        a[i-1] = a[j];
-        a[j] = tmp;
+        a[i-1] = a[j]; a[j] = tmp;
 
         j = a.length-1;
         while (i<j) {
             tmp = a[i];
-            a[i] = a[j];
-            a[j] = tmp;
+            a[i] = a[j]; a[j] = tmp;
             i++; j--;
         }
 
         return true;
     }
 
-    static int arrToInt(int[] a) {
+    static int convert(int[] a) {
         int n = 0;
 
         for (int i=0; i<a.length; i++) {
@@ -42,28 +37,22 @@ public class Main {
     }
 
 
-
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
-        String aStr = line[0];
-        b = Integer.parseInt(line[1]);
 
-        int[] a = new int[aStr.length()];
-        for (int i=0; i<aStr.length(); i++) {
-            int num = aStr.charAt(i) - '0';
-            a[i] = num;
+        int[] a = new int[line[0].length()];
+        for (int i=0; i<line[0].length(); i++) {
+            a[i] = line[0].charAt(i) - '0';
         }
         Arrays.sort(a);
-        int limit = 1;
-        for (int i=0; i<a.length-1; i++) limit *= 10;
+        int b = Integer.parseInt(line[1]), c = -1;
 
-        int ans = -1;
         do {
-            int c = arrToInt(a);
-            if (limit <= c && c < b) ans = c;
+            int k = convert(a);
+            if (a[0] != 0 && k < b) c = k;
         } while (next_permutation(a));
 
-        System.out.println(ans);
+        System.out.println(c);
     }
 }
