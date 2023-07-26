@@ -1,74 +1,56 @@
 import java.io.*;
 import java.util.*;
 
-
-
 public class Main {
 
-    static int[] a;
-    static int n, l, r, x;
-    
-    static boolean isValidRange(int[] t) {
-        int sum = 0;
-        for (int i=0; i<t.length; i++) {
-            sum += t[i];
-        }
+    static int n, l, r, x, ans;
 
-        return l <= sum && sum <= r;
-    }
+    static int[] a = new int[15];
+    static boolean[] selected = new boolean[15];
 
-    static boolean isValidDiff(int[] t) {
-        Arrays.sort(t);
-        return t[t.length-1] - t[0] >= x;
-    }
-
-    static boolean isMoreThanTwo(int[] t) {
-        return t.length >= 2;
-    }
-
-    static boolean check(int bit) {
-        int c = 0;
-
-        for (int i=0; i<n; i++) {
-            int selected = (bit & (1<<i));
-            if (selected != 0) {
-                c++;
+    static void go(int idx) {
+        if (idx == n) {
+            int easy = -1;
+            int hard = -1;
+            int sum = 0;
+            int cnt = 0;
+            for (int i=0; i<n; i++) {
+                if (selected[i] == true) {
+                    cnt++;
+                    sum += a[i];
+                    if (easy == -1 || easy > a[i]) easy = a[i];
+                    if (hard == -1 || hard < a[i]) hard = a[i];
+                }
             }
+
+            if (l <= sum && sum <= r &&
+                    hard - easy >= x && cnt >= 2) ans++;
+            return;
         }
 
-        int[] t = new int[c];
-        for (int i=0, j=0; i<n; i++) {
-            int selected = (bit & (1<<i));
-            if (selected != 0) {
-                t[j] = a[i];
-                j++;
-            }
-        }
+        selected[idx] = true;
+        go(idx+1);
 
-        return isValidRange(t) && isValidDiff(t) && isMoreThanTwo(t);
+        selected[idx] = false;
+        go(idx+1);
     }
-
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] line1 = br.readLine().split(" ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        n = Integer.parseInt(line1[0]);
-        l = Integer.parseInt(line1[1]);
-        r = Integer.parseInt(line1[2]);
-        x = Integer.parseInt(line1[3]);
+        n = Integer.parseInt(st.nextToken());
+        l = Integer.parseInt(st.nextToken());
+        r = Integer.parseInt(st.nextToken());
+        x = Integer.parseInt(st.nextToken());
+        ans = 0;
 
-        a = new int[n];
-        String[] line2 = br.readLine().split(" ");
+        String[] line = br.readLine().split(" ");
         for (int i=0; i<n; i++) {
-            a[i] = Integer.parseInt(line2[i]);
+            a[i] = Integer.parseInt(line[i]);
         }
 
-        int ans = 0;
-        for (int k=0; k<(1<<n); k++) {
-            if (check(k)) {
-                ans++;
-            }
-        }
+
+        go(0);
         System.out.println(ans);
     }
 }
