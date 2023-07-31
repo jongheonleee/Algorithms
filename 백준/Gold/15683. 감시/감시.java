@@ -2,8 +2,8 @@ import java.util.*;
 import java.io.*;
 
 class CCTV {
-    public int x, y, type, dir;
-    
+    int x, y, type, dir;
+
     CCTV(int x, int y, int type) {
         this.x = x;
         this.y = y;
@@ -12,21 +12,26 @@ class CCTV {
     }
 }
 
+
+
 public class Main {
-    static final int[] dx = {0,1,0,-1};
-    static final int[] dy = {1,0,-1,0};
-    static void check(int[][] a, int[][] b, int x, int y, int dir) {
+
+    private static final int[] dx = {0, 1, 0, -1};
+    private static final int[] dy = {1, 0, -1, 0};
+
+    public static void check(int[][] a, int[][] b, int x, int y, int dir) {
         int n = a.length, m = a[0].length;
         int i = x, j = y;
+
         while (0 <= i && i < n && 0 <= j && j < m) {
             if (a[i][j] == 6) break;
             b[i][j] = a[x][y];
-            i += dx[dir];
-            j += dy[dir];
+            i += dx[dir]; j += dy[dir];
         }
     }
-    static int go(int[][] a, ArrayList<CCTV> cctv, int index) {
-        if (index == cctv.size()) {
+
+    public static int go(int[][] a, ArrayList<CCTV> cctv, int idx) {
+        if (cctv.size() == idx) {
             int n = a.length, m = a[0].length;
             int[][] b = new int[n][m];
             for (int i=0; i<n; i++) {
@@ -34,63 +39,74 @@ public class Main {
                     b[i][j] = a[i][j];
                 }
             }
-            for (CCTV c : cctv) {
+
+            for (int i=0; i< cctv.size(); i++) {
+                CCTV c = cctv.get(i);
+                int x = c.x;
+                int y = c.y;
                 int what = c.type;
-                int x = c.x, y = c.y;
                 int dir = c.dir;
+
+
                 if (what == 1) {
-                    check(a,b,x,y,dir);
+                    check(a, b, x, y, dir);
                 } else if (what == 2) {
-                    check(a,b,x,y,dir);
-                    check(a,b,x,y,(dir+2)%4);
+                    check(a, b, x, y, dir);
+                    check(a, b, x, y, (dir+2)%4);
                 } else if (what == 3) {
-                    check(a,b,x,y,dir);
-                    check(a,b,x,y,(dir+1)%4);
+                    check(a, b, x, y, dir);
+                    check(a, b, x, y, (dir+1)%4);
                 } else if (what == 4) {
-                    check(a,b,x,y,dir);
-                    check(a,b,x,y,(dir+1)%4);
-                    check(a,b,x,y,(dir+2)%4);
-                } else if (what == 5) {
-                    check(a,b,x,y,dir);
-                    check(a,b,x,y,(dir+1)%4);
-                    check(a,b,x,y,(dir+2)%4);
-                    check(a,b,x,y,(dir+3)%4);
-                } 
+                    check(a, b, x, y, dir);
+                    check(a, b, x, y, (dir+1)%4);
+                    check(a, b, x, y, (dir+2)%4);
+                } else {
+                    // what == 5
+                    check(a, b, x, y, dir);
+                    check(a, b, x, y, (dir+1)%4);
+                    check(a, b, x, y, (dir+2)%4);
+                    check(a, b, x, y, (dir+3)%4);
+                }
             }
+
             int cnt = 0;
             for (int i=0; i<n; i++) {
                 for (int j=0; j<m; j++) {
-                    if (b[i][j] == 0) {
-                        cnt += 1;
-                    }
+                    if (b[i][j] == 0) cnt++;
                 }
             }
+
             return cnt;
         }
+
         int ans = 100;
         for (int i=0; i<4; i++) {
-            cctv.get(index).dir = i;
-            int temp = go(a, cctv, index+1);
-            if (ans > temp) {
-                ans = temp;
-            }
+            cctv.get(idx).dir = i;
+            int tmp = go(a, cctv, idx+1);
+            if (ans > tmp) ans = tmp;
         }
+
         return ans;
     }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] line = br.readLine().split(" ");
+        int n = Integer.parseInt(line[0]);
+        int m = Integer.parseInt(line[1]);
+
         int[][] a = new int[n][m];
         ArrayList<CCTV> cctv = new ArrayList<>();
         for (int i=0; i<n; i++) {
+            String[] input = br.readLine().split(" ");
             for (int j=0; j<m; j++) {
-                a[i][j] = sc.nextInt();
-                if (a[i][j] >= 1 && a[i][j] <= 5) {
+                a[i][j] = Integer.parseInt(input[j]);
+                if (1 <= a[i][j] && a[i][j] <= 5) {
                     cctv.add(new CCTV(i, j, a[i][j]));
                 }
             }
         }
+
         System.out.println(go(a, cctv, 0));
     }
 }
