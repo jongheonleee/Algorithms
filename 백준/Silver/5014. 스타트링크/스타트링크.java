@@ -1,20 +1,10 @@
 import java.util.*;
 import java.io.*;
-class Pair {
-    int x, step;
 
-    Pair(int x, int step) {
-        this.x = x;
-        this.step = step;
-    }
-}
 
 public class Main {
 
 
-    static boolean[] check;
-
-    static char[] dir = {'u', 'd'};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
@@ -25,45 +15,37 @@ public class Main {
         int u = Integer.parseInt(st.nextToken());
         int d = Integer.parseInt(st.nextToken());
 
-        check = new boolean[f+1];
+        boolean[] check = new boolean[f+1];
+        int[] dist = new int[f+1];
 
-        Queue<Pair> q = new LinkedList<>();
-        q.add(new Pair(s, 0));
+        Queue<Integer> q = new LinkedList<>();
+        q.add(s);
         check[s] = true;
+        dist[s] = 0;
 
         while (!q.isEmpty()) {
-            Pair p = q.remove();
-            int x = p.x;
-            int step = p.step;
+            int now = q.remove();
 
-            if (x == g && check[g] == true) {
-                System.out.println(step);
-                System.exit(0);
+            int up = now + u;
+            int down = now - d;
+
+            if (1 <= up && up <= f && check[up] == false) {
+                check[up] = true;
+                dist[up] = dist[now]+1;
+                q.add(up);
             }
 
-            for (int k=0; k<2; k++) {
-                char direction = dir[k];
-
-                if (direction == 'u') {
-                    int next = x+u;
-                    if (1 <= next && next <= f && check[next] == false) {
-                        q.add(new Pair(next, step+1));
-                        check[next] = true;
-                    }
-                } else {
-                    int next = x-d;
-                    if (1 <= next && next <= f && check[next] == false) {
-                        q.add(new Pair(next, step+1));
-                        check[next] = true;
-                    }
-                }
+            if (1 <= down && down <= f && check[down] == false) {
+                check[down] = true;
+                dist[down] = dist[now]+1;
+                q.add(down);
             }
-
         }
 
-        
-        System.out.println("use the stairs");
-        
-
+        if (check[g]) {
+            System.out.println(dist[g]);
+        } else {
+            System.out.println("use the stairs");
+        }
     }
 }
