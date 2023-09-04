@@ -7,32 +7,32 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
-
         int n = Integer.parseInt(br.readLine());
 
-        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((o1, o2) -> o2 - o1);
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>((o1, o2) -> o1 - o2);
+        PriorityQueue<Integer> left = new PriorityQueue<>((o1, o2) -> o2 - o1);
+        PriorityQueue<Integer> right = new PriorityQueue<>((o1, o2) -> o1 - o2);
 
         for (int i=0; i<n; i++) {
             int num = Integer.parseInt(br.readLine());
 
-            if (maxHeap.size() == minHeap.size()) {
-                maxHeap.offer(num);
+            if (left.size() == right.size()) {
+                left.offer(num);
             } else {
-                minHeap.offer(num);
+                right.offer(num);
             }
 
-            if (!minHeap.isEmpty() && !maxHeap.isEmpty()) {
-                if (minHeap.peek() < maxHeap.peek()) {
-                    int tmp = minHeap.poll();
-                    minHeap.offer(maxHeap.poll());
-                    maxHeap.offer(tmp);
+            if (!left.isEmpty() && !right.isEmpty()) {
+                if (left.peek() > right.peek()) {
+                    int tmp = right.poll();
+                    right.offer(left.poll());
+                    left.offer(tmp);
                 }
             }
-
-            sb.append(maxHeap.peek() + "\n");
+            sb.append(left.peek() + "\n");
         }
+
         System.out.println(sb);
+
     }
 
 }
