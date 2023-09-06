@@ -2,37 +2,38 @@ import java.io.*;
 import java.util.*;
 
 
+
 public class Main {
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         int n = Integer.parseInt(br.readLine());
+        PriorityQueue<Integer> leftMax = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> rightMin = new PriorityQueue<>();
 
-        PriorityQueue<Integer> left = new PriorityQueue<>((o1, o2) -> o2 - o1);
-        PriorityQueue<Integer> right = new PriorityQueue<>((o1, o2) -> o1 - o2);
-
-        for (int i=0; i<n; i++) {
+        while (n-- > 0) {
             int num = Integer.parseInt(br.readLine());
 
-            if (left.size() == right.size()) {
-                left.offer(num);
+            if (leftMax.size() == rightMin.size()) {
+                leftMax.offer(num);
             } else {
-                right.offer(num);
+                rightMin.offer(num);
             }
 
-            if (!left.isEmpty() && !right.isEmpty()) {
-                if (left.peek() > right.peek()) {
-                    int tmp = right.poll();
-                    right.offer(left.poll());
-                    left.offer(tmp);
+            if (!leftMax.isEmpty() && !rightMin.isEmpty()) {
+                if (leftMax.peek() > rightMin.peek()) {
+                    int tmp = leftMax.poll();
+                    leftMax.offer(rightMin.poll());
+                    rightMin.offer(tmp);
                 }
             }
-            sb.append(left.peek() + "\n");
+            bw.write(leftMax.peek() + "\n");
         }
-
-        System.out.println(sb);
-
+        bw.flush();
+        bw.close();
+        
     }
-
 }
