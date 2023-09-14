@@ -81,8 +81,8 @@ public class Main {
 //        }
 
         if (gramX == -1 && gramY == -1) {
-            if (distGramX[row-1][col-1] != -1 && limit >= distGramX[row-1][col-1]) {
-                System.out.println(distGramX[row-1][col-1]);
+            if (ans != -1 && limit >= ans) {
+                System.out.println(ans);
             } else {
                 System.out.println("Fail");
             }
