@@ -75,19 +75,11 @@ public class Main {
         int ans = ansGramX != -1 ? ansGramX : -1;
 
         // 그람에 도달 할 수 없음
-//        if (gramX == -1 && gramY == -1) {
-//            System.out.println(ans != -1 && ans <= limit ? ans : "Fail");
-//            System.exit(0);
-//        }
-
         if (gramX == -1 && gramY == -1) {
-            if (ans != -1 && limit >= ans) {
-                System.out.println(ans);
-            } else {
-                System.out.println("Fail");
-            }
+            System.out.println(ans != -1 && ans <= limit ? ans : "Fail");
             System.exit(0);
         }
+
 
         // 경로 2 - 그람을 가지고 공주한테 도달하는 최단거리
         distGramO[gramX][gramY] = distGramX[gramX][gramY];
@@ -110,30 +102,13 @@ public class Main {
             }
         }
 
-//        int ansGramO = distGramO[row-1][col-1];
-//        ans = ansGramO != -1 && ans >= ansGramO ? ansGramO : ans;
-//        System.out.println(ans != -1 && ans <= limit ? ans : "Fail");
-
-        int tmp1 = distGramX[row-1][col-1];
-        int tmp2 = distGramO[row-1][col-1];
-        int res = -1;
-
-        if (tmp1 != -1 && tmp2 != -1) {
-            if (tmp1 >= tmp2) {
-                res = tmp2;
-            } else {
-                res = tmp1;
-            }
-        } else if (tmp1 != -1) {
-            res = tmp1;
-        } else if (tmp2 != -1) {
-            res = tmp2;
-        }
-
-        if (res != -1 && res <= limit) {
-            System.out.println(res);
+        int ansGramO = distGramO[row-1][col-1];
+        if (ans != -1) {
+            ans = ansGramO != -1 && ans >= ansGramO ? ansGramO : ans;
         } else {
-            System.out.println("Fail");
+            ans = ansGramO;
         }
+        System.out.println(ans != -1 && ans <= limit ? ans : "Fail");
+
     }
 }
