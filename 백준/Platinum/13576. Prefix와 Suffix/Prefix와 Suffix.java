@@ -3,12 +3,13 @@ import java.util.*;
 
 public class Main {
 
+
     static int[] preprocessing(String p) {
         int m = p.length();
         int[] pi = new int[m];
 
-        int j = 0;
         pi[0] = 0;
+        int j = 0;
 
         for (int i=1; i<m; i++) {
             while (j>0 && p.charAt(i) != p.charAt(j)) {
@@ -26,15 +27,14 @@ public class Main {
         return pi;
     }
 
-
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String s = br.readLine();
-
-        int[] pi = preprocessing(s);
         int n = s.length();
 
+        int[] pi = preprocessing(s);
         int[] cnt = new int[n+1];
+
         for (int i=0; i<n; i++) {
             cnt[pi[i]] += 1;
         }
@@ -48,7 +48,6 @@ public class Main {
 
         for (int i=n; i>0; i=pi[i-1]) {
             ans1.add(i);
-            // 1을 더한 이유 파악하기
             ans2.add(cnt[i]+1);
         }
 
