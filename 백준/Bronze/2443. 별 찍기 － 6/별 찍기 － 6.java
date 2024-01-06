@@ -8,33 +8,23 @@ public class Main {
     private static final String STAR = "*";
     private static final String SPACE = " ";
     private static final String ENTER = "\n";
+    private static final StringBuilder sb = new StringBuilder();
+
+    private static void go(int n, int i) {
+        if (i == n) return;
+
+        for (int j=0; j<2*n-1-i;j++) {
+            if (i <= j) sb.append(STAR);
+            else sb.append(SPACE);
+        }
+        sb.append(ENTER);
+        go(n, i+1);
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(br.readLine());
-
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<2*n-1-i; j++) {
-                if (i <= j && j < 2*n-1-i) {
-                    sb.append(STAR);
-                } else {
-                    sb.append(SPACE);
-                }
-            }
-            sb.append(ENTER);
-        }
+        go(n, 0);
         System.out.println(sb);
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
