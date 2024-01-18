@@ -2,68 +2,51 @@ import java.util.*;
 import java.io.*;
 
 
-
 public class Main {
-
-    static int n, m, ans;
-    static int[][] users;
-    static void go(int idx, int cnt, ArrayList<Integer> selected) {
-        if (idx == m) {
-            if (cnt == 3) {
-                int tmp = calc(selected);
-                if (ans < tmp) ans = tmp;
+    static int n;
+    static int m;
+    static int ans;
+    static int[][] score;
+    static void go(int i, int j, int[] selected) {
+        if (j == 3) {
+            int sum = 0;
+            for (int k=0; k<n; k++) {
+                int max = 0;
+                for (int l=0; l<selected.length; l++) {
+                    int selectedIdx = selected[l];
+                    if (max < score[k][selectedIdx]) max = score[k][selectedIdx];
+                }
+                sum += max;
             }
-
+            if (ans < sum) ans = sum;
             return;
         }
 
-        if (cnt == 3) {
-            int tmp = calc(selected);
-            if (ans < tmp) ans = tmp;
-            return;
-        }
+        if (i >= m)return;
 
-        // selected
-        selected.add(idx);
-        go(idx+1, cnt+1, selected);
+        selected[j] = i;
+        go(i+1, j+1, selected);
 
-        selected.remove(selected.size()-1);
-        go(idx+1, cnt, selected);
+        selected[j] = 0;
+        go(i+1, j, selected);
 
-    }
-
-
-    static int calc(ArrayList<Integer> selected) {
-        int ans = 0;
-
-        for (int i=0; i< users.length; i++) {
-            int max = 0;
-            for (int j : selected) {
-                if (max < users[i][j]) max = users[i][j];
-            }
-
-            ans += max;
-        }
-
-        return ans;
     }
 
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
+        String[] line1 = br.readLine().split(" ");
+        n = Integer.parseInt(line1[0]);
+        m = Integer.parseInt(line1[1]);
+        score = new int[n][m];
 
-        users = new int[n][m];
         for (int i=0; i<n; i++) {
-            String[] line = br.readLine().split(" ");
+            String[] line2 = br.readLine().split(" ");
             for (int j=0; j<m; j++) {
-                users[i][j] = Integer.parseInt(line[j]);
+                score[i][j] = Integer.parseInt(line2[j]);
             }
         }
-
-        go(0, 0, new ArrayList<>());
+        go(0, 0, new int[3]);
         System.out.println(ans);
-
     }
+
 }
