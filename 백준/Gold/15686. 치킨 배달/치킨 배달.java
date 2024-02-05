@@ -10,128 +10,94 @@ class Pair {
     }
 }
 
-class Info {
-
-    int num, mark;
-
-    Info(int num, int mark) {
-        this.num = num;
-        this.mark = mark;
-    }
-}
-
 public class Main {
 
-    static Info[][] map;
-    static boolean[][] check;
-
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {1, 0, -1, 0};
-
-    static int isValid(int bit) {
-        int cnt = 0;
-
-        while (bit > 0) {
-            cnt += (bit%2);
-            bit = bit/2;
+    static boolean next_permutation(int[] a) {
+        int i = a.length-1;
+        while (i > 0 && a[i-1] >= a[i]) {
+            i -= 1;
         }
 
-        return cnt;
-    }
-
-    static void init() {
-        for (int i=0; i< check.length; i++) {
-            for (int j=0; j< check[0].length; j++) {
-                check[i][j] = false;
-            }
-        }
-    }
-
-
-    static int bfs(int i, int j, boolean[][] vis) {
-        int dist = 0;
-        Queue<Pair> q = new LinkedList<>();
-        q.add(new Pair(i, j));
-        vis[i][j] = true;
-
-        while (!q.isEmpty()) {
-            Pair p = q.remove();
-            int x = p.x, y = p.y;
-
-            if (map[x][y].num == 2 && check[x][y] == true) {
-                dist = Math.abs((i-x)) + Math.abs((j-y));
-                return dist;
-            }
-
-            for (int k=0; k<4; k++) {
-                int nx = x+dx[k], ny = y+dy[k];
-
-                if (0 <= nx && nx < map.length && 0 <= ny && ny < map[0].length && vis[nx][ny] == false) {
-                    vis[nx][ny] = true;
-                    q.add(new Pair(nx, ny));
-                }
-            }
+        if (i <= 0) {
+            return false;
         }
 
-        return dist;
+        int j = a.length-1;
+        while (a[j] <= a[i-1]) {
+            j -= 1;
+        }
 
+        int temp = a[i-1];
+        a[i-1] = a[j];
+        a[j] = temp;
+
+        j = a.length-1;
+        while (i < j) {
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+            i += 1;
+            j -= 1;
+        }
+        return true;
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        // 1. 지도 구현
-        int n = Integer.parseInt(st.nextToken()), m = Integer.parseInt(st.nextToken());
-        map = new Info[n][n];
-        check = new boolean[n][n];
 
-        int cnt = 0;
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[][] a = new int[n][n];
+        ArrayList<Pair> stores = new ArrayList<>();
+        ArrayList<Pair> houses = new ArrayList<>();
+
         for (int i=0; i<n; i++) {
             String[] line = br.readLine().split(" ");
             for (int j=0; j<n; j++) {
-                map[i][j] = new Info(Integer.parseInt(line[j]), 0);
-                if (map[i][j].num == 2) {
-                    map[i][j].mark = (1<<cnt);
-                    cnt += 1;
+                a[i][j] = Integer.parseInt(line[j]);
+
+                if (a[i][j] == 1) {
+                    houses.add(new Pair(i, j));
+                } else if (a[i][j] == 2) {
+                    stores.add(new Pair(i, j));
                 }
             }
         }
 
+        int[] d = new int[stores.size()];
+        for (int i=0; i<m; i++) {
+            d[i] = 1;
+        }
+
+        Arrays.sort(d);
         int ans = -1;
-        for (int i=0; i<(1<<cnt); i++) {
-            if (isValid(i) != m) continue;
 
-            init();
+        do {
             int sum = 0;
-
-            for (int j=0; j<cnt; j++) {
-                if ((i & (1<<j)) != 0) {
-                    for (int l=0; l<n; l++) {
-                        for (int z=0; z<n; z++) {
-                            if (map[l][z].num == 2 && map[l][z].mark == (1<<j)) {
-                                check[l][z] = true;
-                            }
-                        }
-                    }
+            for (Pair house : houses) {
+                int min = -1;
+                
+                for (int i=0; i< stores.size(); i++) {
+                    if (d[i] == 0) continue;
+                    
+                    Pair store = stores.get(i);
+                    
+                    int d1 = house.x - store.x;
+                    int d2 = house.y - store.y;
+                    
+                    if (d1 < 0) d1 = -d1;
+                    if (d2 < 0) d2 = -d2;
+                    
+                    int dist = d1+d2;
+                    if (min == -1 || min > dist) min = dist;
                 }
+                sum += min;
             }
-
-
-            for (int l=0; l<n; l++) {
-                for (int z=0; z<n; z++) {
-                    if (map[l][z].num == 1) {
-                        int dist = bfs(l, z, new boolean[n][n]);
-                        sum += dist;
-                    }
-                }
-            }
-
             if (ans == -1 || ans > sum) ans = sum;
-
-        }
+        } while (next_permutation(d));
         System.out.println(ans);
-
-
 
     }
 }
