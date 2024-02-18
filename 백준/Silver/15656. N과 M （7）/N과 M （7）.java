@@ -2,38 +2,59 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.stream.Stream;
 
+
+/**
+문제 요약
+
+ N개의 자연수 중에서 M개를 고른 수열, 중복허용
+ 1 ≤ M ≤ N ≤ 7
+ */
 public class Main {
-    static Integer[] a;
+
+
+    static int n, m;
+    static int[] numbers;
     static StringBuilder sb = new StringBuilder();
-    static String[] line;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        line = br.readLine().split(" ");
-        int n = Integer.parseInt(line[0]), m = Integer.parseInt(line[1]);
-        a = new Integer[n];
-        line = br.readLine().split(" ");
-        for (int i=0; i<n; i++) {
-            a[i] = Integer.parseInt(line[i]);
-        }
+    // 순열 만들기 -> 브루트포스, 백트랙킹
+    // n에서 m개 선정, 중복허용
+    // 브루트포스, 백트랙킹
+        // 깊이 m까지 탐색
+        // 각 단계에서 숫자 한개 선정
+        // m+1까지 도달하면 해당 문자열 저장 재귀호출 종료
 
-        // 정렬시키기
-        Arrays.sort(a);
-        go(m, "");
-        System.out.println(sb);
-
-    }
-
-    public static void go(int m, String sequence) {
-        if (m == 0) {
-            sb.append(sequence).append("\n");
+    static void go(int depth, String com) {
+        if (depth == m) {
+            sb.append(com).append("\n");
             return;
         }
 
-        for (int i=0; i<a.length; i++) {
-            go(m-1, sequence + (a[i] + " "));
+        for (int i=0; i<n; i++) {
+            go(depth+1, com + numbers[i] + " ");
         }
     }
+    public static void main(String[] args) throws IOException {
+        InputStreamReader in = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(in);
+        StringTokenizer st = new StringTokenizer(br.readLine(),  " ");
 
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        numbers = new int[n];
+        st = new StringTokenizer(br.readLine(), " ");
+        for (int i=0; i<n; i++) {
+            numbers[i] = Integer.parseInt(st.nextToken());
+        }
+        Arrays.sort(numbers);
+        go(0, "");
+        System.out.print(sb);
+    }
 }
+
