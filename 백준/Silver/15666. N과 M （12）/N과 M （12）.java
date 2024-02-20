@@ -1,87 +1,62 @@
-import java.util.*;
-class Result implements Comparable<Result> {
-    Integer[] a;
-    Result(ArrayList<Integer> a) {
-        this.a = a.toArray(new Integer[a.size()]);
-    }
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-    int get(int i) {
-        return (int)this.a[i];
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Result) {
-            Result that = (Result)o;
-            int n = this.a.length;
 
-            for (int i=0; i<n; i++) {
-                if (this.a[i].intValue() != that.a[i].intValue()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+/**
+문제 요약
 
-    public int compareTo(Result that) {
-        int n = this.a.length;
-        for(int i=0; i<n; i++) {
-            if (this.a[i] == that.a[i]) continue;
-            if (this.a[i] < that.a[i]) return -1;
-            if (this.a[i] > that.a[i]) return 1;
-        }
-        return 0;
-    }
-}
+ N개의 자연수 중에서 M개를 고른 수열, 중복 허용, 비내림차순
+ 1 ≤ M ≤ N ≤ 8
+
+ LinkedHashSet에 저장
+ sb 출력형식 맞추기
+
+ 백트랙킹, 재귀적 호출
+
+ */
 public class Main {
-    static boolean[] c = new boolean[10];
-    static int[] a = new int[10];
-    static int[] num = new int[10];
-    static ArrayList<Result> d = new ArrayList<>();
+    static int n, m;
+    static int[] a;
+    static Set<String> coms = new LinkedHashSet<>();
 
-    static void go(int i, int start, int n, int m) {
-        if (i == m) {
-            ArrayList<Integer> tmp = new ArrayList<>();
-            for (int j=0; j<m; j++) {
-                tmp.add(num[a[j]]);
-            }
-            d.add(new Result(tmp));
+    static void go(int index, int depth, String com) {
+        if (depth == m) {
+            coms.add(com);
             return;
         }
 
-        for (int j=start; j<n; j++) {
-            c[i] = true;
-            a[i] = j;
-            go(i+1, j, n, m);
-            c[i] = false;
+        for (int i=index; i<n; i++) {
+            go(i,depth+1, com + a[i] + " ");
         }
-
     }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
 
-        for (int i=0; i<n; i++)
-            num[i] = sc.nextInt();
-
-        Arrays.sort(num, 0, n);
-        go(0, 0, n, m);
-        Collections.sort(d);
+    public static void main(String[] args) throws IOException {
+        InputStreamReader in = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(in);
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i<d.size(); i++){
-            if (i == 0 || !d.get(i).equals(d.get(i-1))) {
-                for (int j=0; j<m; j++) {
-                    sb.append(d.get(i).get(j));
-                    if (j != m-1) sb.append(' ');
-                }
-                sb.append('\n');
-            }
+
+        String[] line1 = br.readLine().split(" ");
+        n = Integer.parseInt(line1[0]);
+        m = Integer.parseInt(line1[1]);
+
+        String[] line2 = br.readLine().split(" ");
+        a = new int[n];
+        for (int i=0; i<n; i++) {
+            a[i] = Integer.parseInt(line2[i]);
         }
-        System.out.println(sb);
+        Arrays.sort(a);
+
+        go(0, 0, "");
+        coms.stream().forEach(com -> sb.append(com).append("\n"));
+        sb.substring(0, sb.length()-2);
+        System.out.print(sb);
     }
 }
+
