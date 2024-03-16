@@ -1,52 +1,79 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 
+
+/**
+문제 요약
+ 1번 컴퓨터를 통해 웜 바이러스에 걸리게 되는 컴퓨터의 수를 출력하는 프로그램을 작성하시오.
+
+ */
 
 public class Main {
 
-    static final int MAX = 100;
+    /**
+     접근법
+        BFS
+        1. 그래프 구현
+        2. BFS 돌리기
+        3. 방문 표시 카운트
 
-    static int[] parents = new int[MAX+1];
+     */
 
-    static void union(int x, int y) {
-        int xHead = find(x);
-        int yHead = find(y);
 
-        if (xHead == yHead) {
-            return;
-        } else {
-            parents[yHead] = xHead;
-        }
-
-    }
-
-    static int find(int x) {
-        if (x == parents[x]) return x;
-        return parents[x] = find(parents[x]);
-    }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        InputStreamReader in = new InputStreamReader(System.in);
+        BufferedReader br = new BufferedReader(in);
+
+        // 0. 입력 받기
         int n = Integer.parseInt(br.readLine());
-        for (int i=1; i<=n; i++) {
-            parents[i] = i;
-        }
-
         int m = Integer.parseInt(br.readLine());
-        for (int i=0; i<m; i++) {
+        Set<Integer> set = new HashSet<>();
+
+        // 1. 그래프 구현
+            // 연결
+            // 방문 표시
+        boolean[][] conn = new boolean[n+1][n+1];
+        boolean[][] vis = new boolean[n+1][n+1];
+
+        while (m-- > 0) {
             String[] line = br.readLine().split(" ");
-            int x = Integer.parseInt(line[0]);
-            int y = Integer.parseInt(line[1]);
-            union(x, y);
+            int u = Integer.parseInt(line[0]);
+            int v = Integer.parseInt(line[1]);
+
+            conn[u][v] = conn[v][u] = true;
         }
 
-        int cnt = 0;
-        for (int i=2; i<=n; i++) {
-            if (find(1) == find(i)) {
-                cnt += 1;
+        // 2. BFS 적용
+        Queue<Integer> q = new LinkedList<>();
+        q.add(1);
+
+        while (!q.isEmpty()) {
+            int u = q.remove();
+
+            for (int v=1; v<=n; v++) {
+                // 서로 같은 경우
+                if (v == u) continue;
+                // 연결이 안된 경우
+                if (!conn[u][v] || !conn[v][u]) continue;
+                // 이미 방문한 경우
+                if (vis[u][v] || vis[v][u]) continue;
+
+                q.add(v);
+                vis[u][v] = true;
+                set.add(v);
             }
         }
-        System.out.println(cnt);
+
+        // 3. 방문 표시 카운트 및 반환
+        System.out.println(set.size());
 
     }
 }
+
