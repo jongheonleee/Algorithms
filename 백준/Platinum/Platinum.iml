@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/10256. 돌연변이" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10538. 빅 픽쳐" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1201. NMK" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/12104. 순환 순열" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1305. 광고" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/13445. 부분 수열 XOR" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/13504. XOR 합" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/13576. Prefix와 Suffix" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1517. 버블 소트" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/16909. 카드 구매하기 3" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1786. 찾기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/1981. 배열에서 이동" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2261. 가장 가까운 두 점" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2809. 아스키 거리" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2873. 롤러코스터" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/3015. 오아시스 재결합" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/3111. 검열" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/6549. 히스토그램에서 가장 큰 직사각형" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/9202. Boggle" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/9250. 문자열 집합 판별" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/9376. 탈옥" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

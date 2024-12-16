@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/10989. 수 정렬하기 3" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10990. 별 찍기 － 15" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10991. 별 찍기 － 16" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10992. 별 찍기 － 17" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10995. 별 찍기 － 20" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/10996. 별 찍기 － 21" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/14697. 방 배정하기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/16916. 부분 문자열" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/16917. 양념 반 후라이드 반" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/16968. 차량 번호판 1" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/19532. 수학은 비대면강의입니다" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2231. 분해합" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/22864. 피로도" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2309. 일곱 난쟁이" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2438. 별 찍기 － 1" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2442. 별 찍기 － 5" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2443. 별 찍기 － 6" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2444. 별 찍기 － 7" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2446. 별 찍기 － 9" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2522. 별 찍기 － 12" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2523. 별 찍기 － 13" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2750. 수 정렬하기" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2798. 블랙잭" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2875. 대회 or 인턴" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/4690. 완전 세제곱" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/9094. 수학적 호기심" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
