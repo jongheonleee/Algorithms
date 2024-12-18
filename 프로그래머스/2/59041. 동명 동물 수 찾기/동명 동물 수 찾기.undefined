@@ -1,0 +1,11 @@
+-- 동물 보호소에 들어온 동물 이름 중 두 번 이상 쓰인 이름과 해당 이름이 쓰인 횟수를 조회하는 SQL문을 작성
+
+-- 1. 이름별로 그룹핑한다 
+-- 2. 이때, 그룹핑의 수가 최소 2 이상이어야한다
+-- 3. 이름, 카운팅 값을 조회한다 
+
+SELECT NAME, COUNT(NAME)
+FROM ANIMAL_INS
+GROUP BY NAME
+HAVING COUNT(NAME) >= 2
+ORDER BY NAME;
