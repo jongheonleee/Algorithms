@@ -8,17 +8,14 @@ def is_valid_range(pos) :
     return 1 <= curr_x <= N and 1 <= curr_y <= N
 
 # 이동 계획에 따른 좌표값 변환해주는 메서드 - 이동 계획 문자를 좌표값으로 변환 
+dx = [0, 0, -1, 1]
+dy = [-1, 1, 0, 0]
+move_types = ['L', 'R', 'U', 'D']
+
 def convert_pos(move) : 
-    if move == 'L' : 
-        return (0, -1)
-    elif move == 'R' : 
-        return (0, 1)
-    elif move =='U' :
-        return (-1, 0)
-    elif move == 'D' : 
-        return (1, 0)
-    else : 
-        raise ValueError("잘못된 이동 계획입니다.")
+    for i in range(len(move_types)) : 
+        if move_types[i] == move : 
+            return (dx[i], dy[i])
 
 # 다음 위치로 이동하는 메서드 - 다음 위치로 계산
 def move_pos(pos, next_pos) : 
