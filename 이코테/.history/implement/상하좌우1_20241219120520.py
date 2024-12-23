@@ -32,8 +32,8 @@ def move_pos(pos, next_pos) :
         # 유효범위 내에 있는지 확인한다
             # 유효범위 내에 있다면 이동하고 위치를 업데이트한다
             # 유효범위 냐에 없다면 이동하지 않는다 
-            
 pos = (1, 1)
+
 for move in moves : 
     next_pos = convert_pos(move)
     new_pos = move_pos(pos, next_pos)

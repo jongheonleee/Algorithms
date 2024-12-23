@@ -8,7 +8,6 @@ def is_valid_range(pos) :
     return 1 <= curr_x <= N and 1 <= curr_y <= N
 
 # 이동 계획에 따른 좌표값 변환해주는 메서드 - 이동 계획 문자를 좌표값으로 변환 
-
 def convert_pos(move) : 
     if move == 'L' : 
         return (0, -1)
@@ -32,13 +31,13 @@ def move_pos(pos, next_pos) :
         # 유효범위 내에 있는지 확인한다
             # 유효범위 내에 있다면 이동하고 위치를 업데이트한다
             # 유효범위 냐에 없다면 이동하지 않는다 
-            
 pos = (1, 1)
+
 for move in moves : 
     next_pos = convert_pos(move)
     new_pos = move_pos(pos, next_pos)
     pos = new_pos if is_valid_range(new_pos) else pos
     
 
-# 최종적으로 현재 위치를 반환한다 
+# 최종적으로 현재 위치를 반환한다, 언팩킹 활용  
 print(*pos)
